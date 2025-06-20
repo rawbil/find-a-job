@@ -1,5 +1,5 @@
 import express from 'express';
-import { LoginUser, LogoutUser, RegisterUser } from '../controllers/auth.controller';
+import { LoginUser, LogoutUser, RegisterUser, updateUserPass } from '../controllers/auth.controller';
 import AuthMiddleware from '../middleware/auth.middleware';
 
 const router = express.Router();
@@ -15,5 +15,9 @@ router.post('/login', LoginUser)
 //!LOGOUT
 //api/auth/logout
 router.post('/logout', AuthMiddleware, LogoutUser);
+
+//!CHANGE PASSWORD
+//api/auth/change-password
+router.put('/change-password',AuthMiddleware, updateUserPass)
 
 export default router;

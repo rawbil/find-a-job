@@ -82,8 +82,8 @@ export const RegisterUser = async (
 
 //!LOGIN
 interface ILoginUser {
-    email: string,
-    password: string
+  email: string;
+  password: string;
 }
 
 export const LoginUser = async (
@@ -92,37 +92,90 @@ export const LoginUser = async (
   next: NextFunction
 ) => {
   try {
-    const {email, password} = req.body as ILoginUser;
+    const { email, password } = req.body as ILoginUser;
     //avoid null fields
-    if(!email || !password) {
-        return next(new ErrorHandler("Please provide all the inputs", 400));
+    if (!email || !password) {
+      return next(new ErrorHandler("Please provide all the inputs", 400));
     }
 
     //check for user with email
-    const user = await userModel.findOne({email}).select("+password");
-    if(!user) {
-        return next(new ErrorHandler("Invalid email credentials", 400))
+    const user = await userModel.findOne({ email }).select("+password");
+    if (!user) {
+      return next(new ErrorHandler("Invalid credentials", 400));
     }
 
     //compare passwords
     const isPassCorrect = await user.comparePasswords(password);
-    if(!isPassCorrect) {
-        return next(new ErrorHandler("Invalid password credentials", 400));
+    if (!isPassCorrect) {
+      return next(new ErrorHandler("Invalid credentials", 400));
     }
 
     try {
-        await CreateCookies(res, user);
+      await CreateCookies(res, user);
     } catch (error: any) {
-        return next(new ErrorHandler(error.message, 500))
+      return next(new ErrorHandler(error.message, 500));
     }
-    
-
   } catch (error: any) {
-    return next(new ErrorHandler(error.message, 500))
+    return next(new ErrorHandler(error.message, 500));
   }
 };
 
 //!CHANGE PASSWORD
+interface IPassword {
+  oldPassword: string;
+  newPassword: string;
+}
+export const updateUserPass = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { oldPassword, newPassword } = req.body as IPassword;
+    const userId = req.user?._id;
+    const user = await userModel.findById(userId).select("+password");
+    if (!user) {
+      return next(new ErrorHandler("User not found. Please login", 401));
+    }
+
+    //ensure both fields are provided
+    if (!oldPassword || !newPassword) {
+      return next(
+        new ErrorHandler("Please provide both old and new password", 400)
+      );
+    }
+
+    //compare old password with user password
+    const isPasswordCorrect = await user.comparePasswords(oldPassword);
+    if (!isPasswordCorrect) {
+      return next(new ErrorHandler("Old password is incorrect", 400));
+    }
+
+    //ensure newpassword is different from old password
+    if (oldPassword === newPassword) {
+      return next(
+        new ErrorHandler(
+          "New Password should be different from old password",
+          409
+        )
+      );
+    }
+
+    user.password = newPassword;
+    await user?.save();
+    // Clear the tokens for user to login again
+    // res.cookie("access_token", "", { maxAge: 1 });
+    // res.cookie("refresh_token", "", { maxAge: 1 });
+
+    res.status(200).json({
+      success: true,
+      user,
+      message: "Password updated successfully",
+    });
+  } catch (error: any) {
+    return next(new ErrorHandler(error.message, 400));
+  }
+};
 
 //!RESET PASSWORD
 
@@ -135,16 +188,17 @@ export const LogoutUser = async (
   try {
     const userId = req.user?._id as string;
     const user = await userModel.findById(userId);
-    if(!user) {
+    if (!user) {
       return next(new ErrorHandler("User not found. Please login again", 401));
     }
 
     //clear cookies
-    res.cookie('access_token', "", {maxAge: 1});
-    res.cookie('refresh_token', "", {maxAge: 1});
+    res.cookie("access_token", "", { maxAge: 1 });
+    res.cookie("refresh_token", "", { maxAge: 1 });
 
-    res.status(200).json({success: true, message: "Logged out successfully!"});
-
+    res
+      .status(200)
+      .json({ success: true, message: "Logged out successfully!" });
   } catch (error: any) {
     return next(new ErrorHandler(error.message, 500));
   }

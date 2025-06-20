@@ -23,16 +23,16 @@ export default async function CreateCookies(res: Response, user: IUser) {
   const accessTokenOptions = {
     expires: new Date(Date.now() + accessTokenExpires * 60 * 1000),
     maxAge: accessTokenExpires * 60 * 1000,
-    secure: true,
-    httpOnly: process.env.NODE_ENV === "production",
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
     sameSite: "lax",
   } as ITokenOptions;
 
   const refreshTokenOptions = {
     expires: new Date(Date.now() + refreshTokenExpires * 24 * 60 * 60 * 1000),
     maxAge: refreshTokenExpires * 24 * 60 * 60 * 1000,
-    secure: true,
-    httpOnly: process.env.NODE_ENV === "production",
+    secure: process.env.NODE_ENV === "production",
+    httpOnly: true,
     sameSite: "lax",
   } as ITokenOptions;
 
