@@ -4,6 +4,7 @@ import { IUser } from "../models/user.model";
 import validator from "validator";
 import bcrypt from "bcryptjs";
 import ErrorHandler from "../utils/ErrorHandler";
+import CreateCookies from "../utils/jwt";
 
 //!REGISTER
 
@@ -98,21 +99,26 @@ export const LoginUser = async (
     }
 
     //check for user with email
-    const user = await userModel.findOne({email});
+    const user = await userModel.findOne({email}).select("+password");
     if(!user) {
-        return next(new ErrorHandler("Invalid credentials", 400))
+        return next(new ErrorHandler("Invalid email credentials", 400))
     }
 
     //compare passwords
-    const isPassCorrect = await user.confirmPasswordFunc(password);
+    const isPassCorrect = await user.comparePasswords(password);
     if(!isPassCorrect) {
-        return next(new ErrorHandler("Invalid credentials", 400));
+        return next(new ErrorHandler("Invalid password credentials", 400));
     }
 
+    try {
+        await CreateCookies(res, user);
+    } catch (error: any) {
+        return next(new ErrorHandler(error.message, 500))
+    }
     
 
   } catch (error: any) {
-    res.status(500).json({ success: false, message: error.message });
+    return next(new ErrorHandler(error.message, 500))
   }
 };
 
@@ -124,6 +130,6 @@ export const LogoutUser = async (
 ) => {
   try {
   } catch (error: any) {
-    res.status(500).json({ success: false, message: error.message });
+    return next(new ErrorHandler(error.message, 500));
   }
 };

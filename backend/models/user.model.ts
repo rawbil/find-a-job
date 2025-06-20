@@ -1,12 +1,15 @@
 import mongoose, { Document, Schema, Model } from "mongoose";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 export interface IUser extends Document {
   fullName: string;
   email: string;
   password: string;
   // confirmPassword?: string;
-  confirmPasswordFunc: (password: string) => Promise<boolean>;
+  comparePasswords: (password: string) => Promise<boolean>;
+  generateAccessToken: () => Promise<string>;
+  generateRefreshToken: () => Promise<string>;
 }
 
 const userSchema = new Schema<IUser>(
@@ -22,7 +25,7 @@ const userSchema = new Schema<IUser>(
     password: {
       type: String,
       required: true,
-      select: false
+    select: false,
     },
     // confirmPassword: {
     //   type: String,
@@ -40,8 +43,25 @@ userSchema.pre<IUser>("save", async function (next) {
 });
 
 //compare passwords
-userSchema.methods.comparePasswordFunc = async function (password: string) {
+userSchema.methods.comparePasswords = async function (password: string) {
   return await bcrypt.compare(password, this.password);
+};
+
+//generate access and refresh tokens
+userSchema.methods.generateAccessToken = async function () {
+  return jwt.sign({ id: this._id }, process.env.ACCESS_TOKEN_SECRET as string, {
+    expiresIn: "1h",
+  });
+};
+
+userSchema.methods.generateRefreshToken = async function () {
+  return jwt.sign(
+    { id: this._id },
+    process.env.REFRESH_TOKEN_SECRET as string,
+    {
+      expiresIn: "7d",
+    }
+  );
 };
 
 const userModel: Model<IUser> = mongoose.model("User", userSchema);
