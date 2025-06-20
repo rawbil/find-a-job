@@ -7,7 +7,7 @@ export default async function AuthMiddleware(req: Request, res: Response, next: 
     try {
         const accessToken = req.cookies.access_token;
         if(!accessToken) {
-            return next(new ErrorHandler("Cookies not found. Please login again", 401));
+            return next(new ErrorHandler("Session not found. Please login again", 401));
         }
 
         const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET as string) as JwtPayload;

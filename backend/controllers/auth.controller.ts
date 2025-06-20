@@ -122,6 +122,10 @@ export const LoginUser = async (
   }
 };
 
+//!CHANGE PASSWORD
+
+//!RESET PASSWORD
+
 //!LOGOUT
 export const LogoutUser = async (
   req: Request,
@@ -129,6 +133,18 @@ export const LogoutUser = async (
   next: NextFunction
 ) => {
   try {
+    const userId = req.user?._id as string;
+    const user = await userModel.findById(userId);
+    if(!user) {
+      return next(new ErrorHandler("User not found. Please login again", 401));
+    }
+
+    //clear cookies
+    res.cookie('access_token', "", {maxAge: 1});
+    res.cookie('refresh_token', "", {maxAge: 1});
+
+    res.status(200).json({success: true, message: "Logged out successfully!"});
+
   } catch (error: any) {
     return next(new ErrorHandler(error.message, 500));
   }
