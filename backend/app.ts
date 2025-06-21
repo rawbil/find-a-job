@@ -3,7 +3,8 @@ import express, { NextFunction, Request, Response } from 'express';
 export const app = express();
 import cors from 'cors';
 require('dotenv').config();
-import AuthRoute from './routes/auth.route'
+import AuthRoute from './routes/auth.route';
+import ProfileRoute from './routes/profile.route'
 
 //body-parsers
 app.use(express.json());
@@ -18,7 +19,8 @@ const corsOptions = {
 }
 app.use(cors(corsOptions));
 
-app.use('/api/auth', AuthRoute)
+app.use('/api/auth', AuthRoute);
+app.use('/api/profile', ProfileRoute);
 
 //test route
 app.get("/test", (req: Request, res: Response, next: NextFunction) => {
