@@ -251,7 +251,7 @@ export const ResetUserPassword = async (
       res.status(200).json({
         success: true,
         message:
-          "Password reset successfully. Please check your email for the new password.",
+          "Password has been reset. Please check your email for the new password.",
       });
     } catch (error: any) {
       return next(new ErrorHandler(error.message, 500));
