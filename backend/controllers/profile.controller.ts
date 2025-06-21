@@ -1,0 +1,12 @@
+import ProfileModel from '../models/profile.model';
+import { Request, Response, NextFunction } from 'express';
+
+//!CREATE USER PROFILE
+
+//!UPDATE USER PROFILE
+
+//!GET USER PROFILE
+
+//!GET ALL PROFILES
+
+//*USER CANNOT DELETE PROFILE, BECAUSE EACH USER NEEDS TO HAVE A PROFILE, IF THEY NO LONGER WANT THEIR PROFILE, THEY CAN JUST DELETE THEIR ACCOUNT
