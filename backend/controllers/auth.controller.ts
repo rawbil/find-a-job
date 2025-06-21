@@ -5,6 +5,8 @@ import validator from "validator";
 import bcrypt from "bcryptjs";
 import ErrorHandler from "../utils/ErrorHandler";
 import CreateCookies from "../utils/jwt";
+import { JwtPayload } from "jsonwebtoken";
+import jwt from 'jsonwebtoken'
 
 //!REGISTER
 
@@ -164,8 +166,8 @@ export const updateUserPass = async (
     user.password = newPassword;
     await user?.save();
     // Clear the tokens for user to login again
-    // res.cookie("access_token", "", { maxAge: 1 });
-    // res.cookie("refresh_token", "", { maxAge: 1 });
+    res.cookie("access_token", "", { maxAge: 1 });
+    res.cookie("refresh_token", "", { maxAge: 1 });
 
     res.status(200).json({
       success: true,
@@ -178,6 +180,97 @@ export const updateUserPass = async (
 };
 
 //!RESET PASSWORD
+export const ResetUserPassword = (
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      // Ensure user is authenticated
+      if (!req.user || !req.user._id) {
+        return next(new ErrorHandler("User not authenticated", 401));
+      }
+
+      const userId = req.user._id as string;
+      const user = await userModel.findById(userId).select("+password");
+      if (!user) {
+        return next(new ErrorHandler("User not found. Please login", 401));
+      }
+
+      // Generate random password of length 16
+      const passString =
+        "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@!$#%():*&";
+      let generatedPassword = "";
+      for (let i = 0; i < 16; i++) {
+        generatedPassword +=
+          passString[Math.floor(Math.random() * passString.length)];
+      }
+
+      // Hash generated password (await the hash operation)
+      const hashedPassword = await bcrypt.hash(generatedPassword, 10);
+
+      // Update user password
+      // const newUser = await userModel.findByIdAndUpdate(
+      //   user._id,
+      //   { password: hashedPassword },
+      //   { new: true }
+      // );
+
+
+      // if (!newUser) {
+      //   return next(new ErrorHandler("Failed to update user password", 500));
+      // }
+      user.password = hashedPassword;
+      await user?.save();
+
+      // Automatic login
+      await CreateCookies(res, user);
+
+      //*SEND EMAIL WITH NEW PASSWORD TO USER
+
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
+//!REFRESH TOKEN
+export const RefreshCookies = (
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      //get refresh token from req.cookies
+      const refreshToken = req.cookies.refresh_token as string;
+      if (!refreshToken) {
+        return next(new ErrorHandler("Refresh Token not found", 401));
+      }
+
+      const decoded = jwt.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET as string
+      ) as JwtPayload;
+      if (!decoded) {
+        return next(
+          new ErrorHandler("Invalid refresh token. Please login again", 401)
+        );
+      }
+
+      const session = await userModel.findById(req.user?._id as string);
+     // const session = await redis.get(decoded.id);
+      if (!session) {
+        return next(
+          new ErrorHandler("User not found. Please login again", 401)
+        );
+      }
+
+     // const user = JSON.parse(session);
+      req.user = session;
+
+      //create new access and refresh token
+      await CreateCookies(res, session);
+    } catch (error: any) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  }
+);
+
+
 
 //!LOGOUT
 export const LogoutUser = async (

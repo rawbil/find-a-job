@@ -1,5 +1,5 @@
 import express from 'express';
-import { LoginUser, LogoutUser, RegisterUser, updateUserPass } from '../controllers/auth.controller';
+import { LoginUser, LogoutUser, RefreshCookies, RegisterUser, ResetUserPassword, updateUserPass } from '../controllers/auth.controller';
 import AuthMiddleware from '../middleware/auth.middleware';
 
 const router = express.Router();
@@ -19,5 +19,13 @@ router.post('/logout', AuthMiddleware, LogoutUser);
 //!CHANGE PASSWORD
 //api/auth/change-password
 router.put('/change-password',AuthMiddleware, updateUserPass)
+
+//!RESET PASSWORD
+//api/auth/reset-password
+router.put('/reset-password', AuthMiddleware, ResetUserPassword);
+
+//!REFRESH TOKENS
+//api/auth/refresh-tokens
+router.post('/refresh-token', AuthMiddleware, RefreshCookies);
 
 export default router;
