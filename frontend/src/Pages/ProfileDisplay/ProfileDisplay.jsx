@@ -1,9 +1,9 @@
 import React from "react";
 import "./ProfileDisplay.css";
-import { useParams } from "react-router-dom";
+//import { useParams } from "react-router-dom";
 
 const ProfileDisplay = () => {
-  const { id } = useParams();
+  //const { id } = useParams();
 
   const profile = {
     name: "James Mwangi",
@@ -16,6 +16,7 @@ const ProfileDisplay = () => {
   };
 
   return (
+  <div class="profile-container">
     <div className="profile-card-dark">
       <div className="profile-photo-container">
         <img src={profile.photo} alt="Profile" className="profile-photo" />
@@ -74,6 +75,7 @@ const ProfileDisplay = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };

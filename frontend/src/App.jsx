@@ -3,7 +3,6 @@ import Home from "./Pages/Home/Home";
 import { Routes, Route } from "react-router-dom";
 import UserProfile from "./Pages/Profile/Profle";
 import ProfileDisplay from "./Pages/ProfileDisplay/ProfileDisplay";
-import './App.css';
 
 function App() {
   return (

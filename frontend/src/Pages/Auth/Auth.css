@@ -14,15 +14,7 @@
   --success-green: #00c853;
 }
 
-/* Base Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Roboto', sans-serif;
-}
-
-body {
+.auth-body {
   background-color: var(--bg-dark);
   color: var(--text-light);
   line-height: 1.6;

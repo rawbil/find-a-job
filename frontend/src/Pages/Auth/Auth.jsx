@@ -113,6 +113,7 @@ const Auth = () => {
   };
 
   return (
+    <div class="auth-body">
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
@@ -215,6 +216,7 @@ const Auth = () => {
           </p>
         </div>
       </div>
+    </div>
     </div>
   );
 };
