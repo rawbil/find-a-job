@@ -1,6 +1,7 @@
 import ProfileModel from '../models/profile.model';
 import { Request, Response, NextFunction } from 'express';
 import ErrorHandler from '../utils/ErrorHandler';
+import cloudinary from 'cloudinary'
 
 //!CREATE USER PROFILE
 export const CreateUserProfile = async(req: Request, res: Response, next: NextFunction) => {
