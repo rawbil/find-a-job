@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import "./Auth.css";
 import {useFormik} from 'formik';
 import { validateAuthSchema } from "../../../utils/auth.schema";
@@ -7,120 +6,26 @@ import { validateAuthSchema } from "../../../utils/auth.schema";
 const Auth = () => {
   // State for toggling between signup and login modes
    const [isSignup, setIsSignup] = useState(false);
-// 
-//   // State for form data
-//   const [formData, setFormData] = useState({
-//     fullName: "",
-//     email: "",
-//     password: "",
-//     confirmPassword: "",
-//   });
-// 
-//   const [errors, setErrors] = useState({});
-// 
-//   const [isLoading, setIsLoading] = useState(false);
-// 
-//   const navigate = useNavigate();
-// 
-//   const validateForm = () => {
-//     const newErrors = {};
-// 
-//     if (!formData.email) {
-//       newErrors.email = "Email is required";
-//     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-//       newErrors.email = "Email is invalid";
-//     }
-// 
-//     if (!formData.password) {
-//       newErrors.password = "Password is required";
-//     } else if (formData.password.length < 6) {
-//       newErrors.password = "Password must be at least 6 characters";
-//     }
-// 
-//     if (isSignup) {
-//       if (!formData.fullName) {
-//         newErrors.fullName = "Name is required";
-//       }
-// 
-//       if (formData.password !== formData.confirmPassword) {
-//         newErrors.confirmPassword = "Passwords do not match";
-//       }
-//     }
-// 
-//     setErrors(newErrors);
-//     return Object.keys(newErrors).length === 0;
-//   };
-// 
-//   // Handles input changes and clears any existing errors for the changed field
-// 
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData((prev) => ({
-//       ...prev,
-//       [name]: value,
-//     }));
-// 
-//     // Clear error for the current field if it exists
-//     if (errors[name]) {
-//       setErrors((prev) => ({
-//         ...prev,
-//         [name]: "",
-//       }));
-//     }
-//   };
-// 
-//   // Handles form submission validates inputs and simulates authentication
-// 
-  const onSubmit = async (e) => {
-    e.preventDefault();
+  const [isLoading, setIsLoading] = useState(false);
 
-//     if (!validateForm()) return;
-// 
-//     setIsLoading(true);
-// 
-//     try {
-//       // Simulate API call
-//       if (isSignup) {
-//         await new Promise((resolve) => setTimeout(resolve, 1000));
-//         console.log("Signing up user:", {
-//           fullName: formData.fullName,
-//           email: formData.email,
-//           password: formData.password,
-//         });
-//         navigate("/");
-//       } else {
-//         await new Promise((resolve) => setTimeout(resolve, 1000));
-//         console.log("Logging in user:", {
-//           email: formData.email,
-//           password: formData.password,
-//         });
-//         navigate("/");
-//       }
-//     } catch (error) {
-//       console.error("Authentication error:", error);
-//       setErrors({
-//         ...errors,
-//         form: "An error occurred. Please try again.",
-//       });
-//     } finally {
-//       setIsLoading(false);
-   // }
+
+  const onSubmit = async (values) => {
+    console.log(values);
   };
 
   // Toggles between login and signup modes and clears any existing errors
-
   const toggleAuthMode = () => {
     setIsSignup((prev) => !prev);
   };
 
-const {values, handleChange,  handleSubmit, handleBlur, errors, touched, isLoading} = useFormik({
+const {values, handleChange,  handleSubmit, handleBlur, errors, touched} = useFormik({
   initialValues: {email: "", fullName: "", password: "", confirmPassword: ""},
   validationSchema: validateAuthSchema,
   onSubmit
 })
 
   return (
-    <div class="auth-body">
+    <div className="auth-body">
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
@@ -131,7 +36,7 @@ const {values, handleChange,  handleSubmit, handleBlur, errors, touched, isLoadi
         {/* Display form-level errors */}
         {errors.form && <div className="error-message">{errors.form}</div>}
 
-        <form onSubmit={handleSubmit} noValidate>
+        <form onSubmit={handleSubmit}>
           {/* Name field - only shown in signup mode */}
           {isSignup && (
             <div className="form-group">

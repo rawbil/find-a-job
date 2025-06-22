@@ -16,7 +16,7 @@ const ProfileDisplay = () => {
   };
 
   return (
-  <div class="profile-container">
+  <div className="profile-container">
     <div className="profile-card-dark">
       <div className="profile-photo-container">
         <img src={profile.photo} alt="Profile" className="profile-photo" />
