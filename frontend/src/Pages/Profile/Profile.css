@@ -1,0 +1,95 @@
+:root {
+  --primary-color: royalblue;
+  --input-border: #ccc;
+}
+
+
+.profile-form {
+  width: 100%;
+  max-width: 500px;
+  margin: 30px auto;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  color: #333;
+  border-top: 6px solid var(--primary-color);
+}
+.profile-form h2 {
+  text-align: center;
+  color: var(--primary-color);
+}
+input,
+textarea,
+button {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid var(--input-border);
+}
+
+textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+/* ===== Button ===== */
+button {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #2e4fa1;
+}
+.avatar-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.avatar-label {
+  cursor: pointer;
+}
+
+.avatar,
+.avatar-placeholder {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--primary-color);
+}
+
+.avatar-placeholder {
+  background-color: #eaeaea;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  border-style: dashed;
+  color: var(--primary-color);
+}
+@media (max-width: 400px) {
+  .profile-form {
+    padding: 15px;
+    margin: 20px auto;
+  }
+
+  .avatar,
+  .avatar-placeholder {
+    width: 80px;
+    height: 80px;
+    font-size: 24px;
+  }
+}
