@@ -5,7 +5,7 @@ import { validateAuthSchema } from "../../../utils/auth.schema";
 import { AxiosError } from "axios";
 import { authLogin, authRegister } from "../../../utils/services/auth.service";
 import { useNavigate } from "react-router-dom";
-//import {toast} from 'react-hot-toast'
+import {toast} from 'react-hot-toast'
 
 const Auth = () => {
   // State for toggling between signup and login modes
@@ -22,8 +22,8 @@ const Auth = () => {
       const response = !isSignup ? await authLogin(values) : await authRegister(values);
       if (response.success) {
         isSignup ? setIsSignup(false) :  navigate('/');
-        //toast.success(response.message);
-        alert(response.message);
+        toast.success(response.message);
+        //alert(response.message);
       } else {
         console.log(response.message)
         setErrormessage(response.message);
