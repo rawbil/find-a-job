@@ -233,7 +233,25 @@ export const GetAllUsersProfiles = async (
   next: NextFunction
 ) => {
   try {
-    const profiles = await ProfileModel.find();
+    const profiles = await ProfileModel.find().limit(20);
+    if (profiles.length === 0) {
+      return next(new ErrorHandler("No Profile to display", 404));
+    }
+
+    res.status(200).json({ success: true, profiles });
+  } catch (error: any) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+};
+
+//!GET THE LAST 10 PROFILES
+export const GetLatestUsersProfiles = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const profiles = await ProfileModel.find().sort({ updatedAt: -1 }).limit(20);
     if (profiles.length === 0) {
       return next(new ErrorHandler("No Profile to display", 404));
     }
