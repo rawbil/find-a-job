@@ -5,7 +5,14 @@ const emailRegex =
 
 const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
 export const validateAuthSchema = yup.object().shape({
-  fullName: yup.string().min(3).required("Your full name is required").trim(),
+   fullName: yup
+    .string()
+    .min(3, "Name too short")
+    .when("$isSignup", {
+      is: true,
+      then: (schema) => schema.required("Your full name is required"),
+      otherwise: (schema) => schema.notRequired(),
+    }),
   email: yup
     .string()
     .matches(emailRegex, "Invalid email format")
@@ -20,5 +27,10 @@ export const validateAuthSchema = yup.object().shape({
   confirmPassword: yup
     .string()
     .oneOf([yup.ref("password")], "Passwords must match")
-    .required("Please confirm your password"),
+    .when("$isSignup", {
+      is: true,
+      then: (schema) => schema.required("Confirm password is required"),
+      otherwise: (schema) => schema.notRequired(),
+    })
+    
 });

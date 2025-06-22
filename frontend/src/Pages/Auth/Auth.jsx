@@ -2,15 +2,41 @@ import { useState } from "react";
 import "./Auth.css";
 import {useFormik} from 'formik';
 import { validateAuthSchema } from "../../../utils/auth.schema";
+import { AxiosError } from "axios";
+import { authLogin, authRegister } from "../../../utils/services/auth.service";
+import { useNavigate } from "react-router-dom";
+//import {toast} from 'react-hot-toast'
 
 const Auth = () => {
   // State for toggling between signup and login modes
    const [isSignup, setIsSignup] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const [errorMessage, setErrormessage] = useState('');
 
 
   const onSubmit = async (values) => {
-    console.log(values);
+    try {
+      setIsLoading(true);
+
+      const response = !isSignup ? await authLogin(values) : await authRegister(values);
+      if (response.success) {
+        isSignup ? setIsSignup(false) :  navigate('/');
+        //toast.success(response.message);
+        alert(response.message);
+      } else {
+        console.log(response.message)
+        setErrormessage(response.message);
+      }
+
+    } catch (error) {
+      console.log(error.message)
+        setErrormessage(error.message || "Authentication failed");
+     
+    }
+    finally {
+      setIsLoading(false);
+    }
   };
 
   // Toggles between login and signup modes and clears any existing errors
@@ -34,7 +60,7 @@ const {values, handleChange,  handleSubmit, handleBlur, errors, touched} = useFo
         </div>
 
         {/* Display form-level errors */}
-        {errors.form && <div className="error-message">{errors.form}</div>}
+        {errorMessage && <div className="error-message">{errorMessage}</div>}
 
         <form onSubmit={handleSubmit}>
           {/* Name field - only shown in signup mode */}
@@ -111,9 +137,9 @@ const {values, handleChange,  handleSubmit, handleBlur, errors, touched} = useFo
             {isLoading ? (
               <span className="spinner"></span>
             ) : isSignup ? (
-              isLoading ? "Submitting..." : "Register"
+              "Register"
             ) : (
-              isLoading ? "Logging you in..." : "Login"
+               "Login"
             )}
           </button>
         </form>

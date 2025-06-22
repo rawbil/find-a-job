@@ -79,7 +79,7 @@ export const RegisterUser = async (
 
     const savedUser = await userModel.findOne({ email }).select("-password");
 
-    res.status(201).json({ success: true, savedUser });
+    res.status(201).json({ success: true, savedUser, message: "User registered successfully" });
   } catch (error: any) {
     //  res.status(500).json({success: false, message: error.message})
     return next(new ErrorHandler(error.message, 500));
