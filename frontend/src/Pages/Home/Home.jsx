@@ -24,8 +24,48 @@ import {
 } from "../../../utils/services/profile.service";
 //import { toast } from "react-hot-toast";
 import AppContext from "../../../utils/context/ContextFunc";
+import CustomerProfile from "../CustomerProfile/CustomerProfile";
 
 const workersImg = "/workers-illustration.png";
+
+const featuredJobs = [
+    {
+      id: 1,
+      client: "Jane Doe",
+      category: "Plumbing",
+      description: "Fix leaking kitchen pipe under the sink.",
+      location: "Kisauni, Mombasa",
+      budget: "Ksh 2,000",
+      timeline: "3rd june ",
+      whatsapp: "+254701206117",
+      phone: "+254701206117",
+      photo: "https://example.com/avatar1.jpg",
+    },
+    {
+      id: 2,
+      client: "John Smith",
+      category: "Electrical",
+      description: "Install new ceiling fans in living room and bedrooms.",
+      location: "Nairobi West",
+      budget: "Ksh 5,000",
+      timeline: "Within 3 days",
+      whatsapp: "+254712345679",
+      phone: "+254712345679",
+      photo: "https://example.com/avatar2.jpg",
+    },
+    {
+      id: 3,
+      client: "Mary Johnson",
+      category: "Painting",
+      description: "Paint entire 3-bedroom house interior.",
+      location: "Kilimani",
+      budget: "Ksh 15,000",
+      timeline: "Next week",
+      whatsapp: "+254712345670",
+      phone: "+254712345670",
+      photo: "https://example.com/avatar3.jpg",
+    },
+  ];
 
 export default function Home() {
   const [latestProfiles, setLatestProfiles] = useState([]);
@@ -98,9 +138,12 @@ export default function Home() {
         </div>
         <nav className="home-nav">
           <a href="#services">Popular Services</a>
-          <a href="/profile" className="btn">
-            <FaUserAlt /> Profile
-          </a>
+          {accessToken && (
+            <a href="/profile" className="btn">
+              <FaUserAlt /> Profile
+            </a>
+          )}
+
           {accessToken ? (
             <button className="logout-btn" onClick={handleLogout}>
               <FaSignOutAlt size={20} /> Logout
@@ -151,8 +194,8 @@ export default function Home() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <button>
-          <FaSearch size={20} />
+        <button className="search-btn">
+          <FaSearch size={17} />
         </button>
       </form>
 
@@ -252,6 +295,21 @@ export default function Home() {
                     </div>
                   </div>
                 ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Clients posting jobs */}
+       <section className="featured-providers">
+        <div className="section-header">
+          <h2>Featured Jobs</h2>
+          <p className="view-all">View All</p>
+        </div>
+        <div className="providers-scroll-container">
+          <div className="providers-grid">
+            {featuredJobs.map((job) => (
+              <CustomerProfile key={job.id} job={job} />
+            ))}
           </div>
         </div>
       </section>
