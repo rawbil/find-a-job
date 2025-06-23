@@ -4,7 +4,8 @@ export const app = express();
 import cors from 'cors';
 require('dotenv').config();
 import AuthRoute from './routes/auth.route';
-import ProfileRoute from './routes/profile.route'
+import ProfileRoute from './routes/profile.route';
+import ClientRoute from './routes/client.route'
 
 //body-parsers
 app.use(express.json());
@@ -24,6 +25,7 @@ app.use(cors(corsOptions));
 
 app.use('/api/auth', AuthRoute);
 app.use('/api/profile', ProfileRoute);
+app.use('/api/client', ClientRoute);
 
 //test route
 app.get("/test", (req: Request, res: Response, next: NextFunction) => {
