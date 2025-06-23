@@ -251,7 +251,7 @@ export const GetLatestUsersProfiles = async (
   next: NextFunction
 ) => {
   try {
-    const profiles = await ProfileModel.find().sort({ updatedAt: -1 }).limit(20);
+    const profiles = await ProfileModel.find().sort({ updatedAt: -1 }).limit(10);
     if (profiles.length === 0) {
       return next(new ErrorHandler("No Profile to display", 404));
     }

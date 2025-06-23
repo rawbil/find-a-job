@@ -25,47 +25,49 @@ import {
 //import { toast } from "react-hot-toast";
 import AppContext from "../../../utils/context/ContextFunc";
 import CustomerProfile from "../CustomerProfile/CustomerProfile";
+import { getLatestClientPosts } from "../../../utils/services/client.service";
+import { formatPhoneNumber } from "../../../utils/formatPhoneNumber";
 
 const workersImg = "/workers-illustration.png";
 
-const featuredJobs = [
-    {
-      id: 1,
-      client: "Jane Doe",
-      category: "Plumbing",
-      description: "Fix leaking kitchen pipe under the sink.",
-      location: "Kisauni, Mombasa",
-      budget: "Ksh 2,000",
-      timeline: "3rd june ",
-      whatsapp: "+254701206117",
-      phone: "+254701206117",
-      photo: "https://example.com/avatar1.jpg",
-    },
-    {
-      id: 2,
-      client: "John Smith",
-      category: "Electrical",
-      description: "Install new ceiling fans in living room and bedrooms.",
-      location: "Nairobi West",
-      budget: "Ksh 5,000",
-      timeline: "Within 3 days",
-      whatsapp: "+254712345679",
-      phone: "+254712345679",
-      photo: "https://example.com/avatar2.jpg",
-    },
-    {
-      id: 3,
-      client: "Mary Johnson",
-      category: "Painting",
-      description: "Paint entire 3-bedroom house interior.",
-      location: "Kilimani",
-      budget: "Ksh 15,000",
-      timeline: "Next week",
-      whatsapp: "+254712345670",
-      phone: "+254712345670",
-      photo: "https://example.com/avatar3.jpg",
-    },
-  ];
+// const featuredJobs = [
+//     {
+//       id: 1,
+//       client: "Jane Doe",
+//       category: "Plumbing",
+//       description: "Fix leaking kitchen pipe under the sink.",
+//       location: "Kisauni, Mombasa",
+//       budget: "Ksh 2,000",
+//       timeline: "3rd june ",
+//       whatsapp: "+254701206117",
+//       phone: "+254701206117",
+//       photo: "https://example.com/avatar1.jpg",
+//     },
+//     {
+//       id: 2,
+//       client: "John Smith",
+//       category: "Electrical",
+//       description: "Install new ceiling fans in living room and bedrooms.",
+//       location: "Nairobi West",
+//       budget: "Ksh 5,000",
+//       timeline: "Within 3 days",
+//       whatsapp: "+254712345679",
+//       phone: "+254712345679",
+//       photo: "https://example.com/avatar2.jpg",
+//     },
+//     {
+//       id: 3,
+//       client: "Mary Johnson",
+//       category: "Painting",
+//       description: "Paint entire 3-bedroom house interior.",
+//       location: "Kilimani",
+//       budget: "Ksh 15,000",
+//       timeline: "Next week",
+//       whatsapp: "+254712345670",
+//       phone: "+254712345670",
+//       photo: "https://example.com/avatar3.jpg",
+//     },
+//   ];
 
 export default function Home() {
   const [latestProfiles, setLatestProfiles] = useState([]);
@@ -76,6 +78,12 @@ export default function Home() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const { accessToken, handleLogout } = useContext(AppContext);
+
+  // ...existing state...
+  const [latestJobs, setLatestJobs] = useState([]);
+  const [jobsLoading, setJobsLoading] = useState(false);
+  const [jobsError, setJobsError] = useState("");
+  const [jobSearchQuery, setJobSearchQuery] = useState("");
 
   useEffect(() => {
     const getLatestProfiles = async () => {
@@ -107,11 +115,34 @@ export default function Home() {
         setProfileLoading(false);
         setFetchError("");
       }
-      console.log("Access Token", accessToken);
     };
     //call the function
     getLatestProfiles();
-  }, [viewAllProfiles, accessToken]);
+  }, [viewAllProfiles]);
+
+  useEffect(() => {
+    const fetchLatestJobs = async () => {
+      setJobsLoading(true);
+      setJobsError("");
+      try {
+        const response = await getLatestClientPosts();
+        if (response.success) {
+          setLatestJobs(response.profiles); // or response.jobs if your backend returns jobs
+        } else {
+          setJobsError(response.message || "Failed to fetch jobs");
+        }
+      } catch (error) {
+        setJobsError(
+          error?.response?.data?.message ||
+            error.message ||
+            "An unexpected error occurred"
+        );
+      } finally {
+        setJobsLoading(false);
+      }
+    };
+    fetchLatestJobs();
+  }, []);
 
   const popularServices = [
     { name: "Plumbing", icon: <FaTools /> },
@@ -130,6 +161,19 @@ export default function Home() {
     );
   };
 
+  //filter jobs based on services required
+  const filterJobs = (jobs) => {
+    if (!jobSearchQuery.trim()) return jobs;
+    return jobs.filter(
+      (job) =>
+        job.services &&
+        job.services.some((service) =>
+          service.toLowerCase().includes(jobSearchQuery.trim().toLowerCase())
+        )
+    );
+  };
+
+
   return (
     <div className="home dark">
       <header className="home-navbar">
@@ -138,6 +182,7 @@ export default function Home() {
         </div>
         <nav className="home-nav">
           <a href="#services">Popular Services</a>
+          <a href="#jobs">Popular Jobs</a>
           {accessToken && (
             <a href="/profile" className="btn">
               <FaUserAlt /> Profile
@@ -264,8 +309,8 @@ export default function Home() {
                         <div className="contact-buttons">
                           {profile.phoneNumber && (
                             <a
-                              href={`https://wa.me/${profile.phoneNumber}`}
-                              className="whatsapp-button"
+                              href={`https://wa.me/${formatPhoneNumber(profile.phoneNumber).replace("+", "")}`}
+    className="whatsapp-button"
                               target="_blank"
                               rel="noopener noreferrer"
                             >
@@ -299,17 +344,41 @@ export default function Home() {
         </div>
       </section>
 
+      {/*job search based on services */}
+      <form
+        className="home-search-bar"
+        style={{ marginTop: "2rem" }}
+        onSubmit={(e) => e.preventDefault()}
+      >
+        <input
+          type="search"
+          placeholder="Search for jobs by service..."
+          value={jobSearchQuery}
+          onChange={(e) => setJobSearchQuery(e.target.value)}
+        />
+        <button className="search-btn">
+          <FaSearch size={17} />
+        </button>
+      </form>
       {/* Clients posting jobs */}
-       <section className="featured-providers">
+      <section className="featured-providers" id="jobs">
         <div className="section-header">
           <h2>Featured Jobs</h2>
           <p className="view-all">View All</p>
         </div>
         <div className="providers-scroll-container">
           <div className="providers-grid">
-            {featuredJobs.map((job) => (
-              <CustomerProfile key={job.id} job={job} />
-            ))}
+            {jobsLoading ? (
+              "Fetching jobs... please wait."
+            ) : jobsError ? (
+              <span style={{ color: "red" }}>{jobsError}</span>
+            ) : latestJobs.length === 0 ? (
+              "No jobs available at the moment."
+            ) : (
+              filterJobs(latestJobs).map((job) => (
+                <CustomerProfile key={job._id || job.id} job={job} />
+              ))
+            )}
           </div>
         </div>
       </section>

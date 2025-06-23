@@ -1,17 +1,18 @@
+import { formatPhoneNumber } from "../../../utils/formatPhoneNumber";
 import "./CustomerProfile.css";
 
-const CustomerProfile = () => {
-  const job = {
-    client: "Alex Kibaya",
-    category: "Plumbing",
-    description: "Fix leaking kitchen pipe under the sink.",
-    location: "Kisauni, Mombasa",
-    budget: "Ksh 2,000",
-    timeline: "Next Week",
-    whatsapp: "+254701206117",
-    phone: "+254701206117",
-    photo: "https://alexmwangikibaya.netlify.app/alex%202.jpg",
-  };
+const CustomerProfile = ({ job }) => {
+  //   const job = {
+  //     client: "Alex Kibaya",
+  //     category: "Plumbing",
+  //     description: "Fix leaking kitchen pipe under the sink.",
+  //     location: "Kisauni, Mombasa",
+  //     budget: "Ksh 2,000",
+  //     timeline: "Next Week",
+  //     whatsapp: "+254701206117",
+  //     phone: "+254701206117",
+  //     photo: "https://alexmwangikibaya.netlify.app/alex%202.jpg",
+  //   };
 
   return (
     <div className="customer-container">
@@ -39,7 +40,9 @@ const CustomerProfile = () => {
           <div className="contact-buttons">
             {job.whatsapp && (
               <a
-                href={`https://wa.me/${job.whatsapp}`}
+                href={`https://wa.me/${formatPhoneNumber(
+                  job.phoneNumber
+                ).replace("+", "")}`}
                 className="whatsapp-button"
                 target="_blank"
                 rel="noopener noreferrer"
