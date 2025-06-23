@@ -15,7 +15,7 @@ interface ICreateProfile {
   name: string;
   location: string;
   services: string[];
-  preferredTime: Date;
+  preferredTime: Date | string;
   description: string;
   budget: string;
   phoneNumber: string;
@@ -117,7 +117,7 @@ interface IUpdateProfile {
   name?: string;
   location?: string;
   services?: string[];
-  preferredTime?: Date;
+  preferredTime?: Date | string;
   description?: string;
   budget?: string;
   phoneNumber?: string;

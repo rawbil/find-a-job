@@ -1,9 +1,9 @@
-import axios from "axios";
 import { useEffect } from "react";
+import createApi from "./axios.create-api";
 
 const useAxiosInterceptor = (setAccessToken) => {
   useEffect(() => {
-    const interceptor = axios.interceptors.response.use(
+    const interceptor = createApi.interceptors.response.use(
       (response) => response,
       (error) => {
         if (error.response && error.response.status === 401) {
@@ -14,7 +14,7 @@ const useAxiosInterceptor = (setAccessToken) => {
       }
     );
     return () => {
-      axios.interceptors.response.eject(interceptor);
+      createApi.interceptors.response.eject(interceptor);
     };
   }, [setAccessToken]);
 };

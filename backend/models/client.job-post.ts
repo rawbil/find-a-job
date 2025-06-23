@@ -9,7 +9,7 @@ export interface IClientProfile extends Document {
   name: string;
   location: string;
   services: string[],
-  preferredTime: Date,
+  preferredTime: Date | string,
   description: string,
   budget: string,
   phoneNumber: string;
@@ -48,7 +48,7 @@ const clientSchema = new Schema<IClientProfile>(
       required: true,
     },
     preferredTime: {
-        type: Date,
+        type: Schema.Types.Mixed,
         required: true,
     },
     description: {

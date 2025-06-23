@@ -1,35 +1,55 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./ProfileDisplay.css";
+import { getUserProfile } from "../../../utils/services/profile.service";
+import toast from "react-hot-toast";
+import { AxiosError } from "axios";
+import { formatPhoneNumber } from "../../../utils/formatPhoneNumber";
+import { FaEnvelope } from "react-icons/fa";
 //import { useParams } from "react-router-dom";
 //import electrician from './electrician.png';
 
 const ProfileDisplay = () => {
   //const { id } = useParams();
+  const [userProfile, setuserProfile] = useState({})
 
-  const profile = {
-    name: "James Mwangi",
-    skills: "Electrician, Residential and commercial wiring",
-    location: "Kisauni, Mombasa",
-    phone: "+254712345678",
-    whatsapp: "+254712345678",
-    facebook: "james.mwangi.electrician",
-    photo: "https://alexmwangikibaya.netlify.app/alex%202.jpg",
-  };
+ useEffect(() => {
+    const getProfile = async () => {
+      try {
+        const response = await getUserProfile();
+        if (response.success) {
+          setuserProfile(response.profile);
+          console.log(response.profile);
+        } else {
+          console.log(response.message);
+          toast.error(response.message);
+        }
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          console.log(error);
+          toast.error(error);
+        } else {
+          console.log(error.message);
+        }
+      }
+    };
+
+    getProfile();
+  }, []);
 
   return (
     <div className="profile-container">
       <div className="profile-card-dark">
         <div className="profile-header">
           <div className="profile-photo-container">
-            <img src={profile.photo} alt="Profile" className="profile-photo" />
+            <img src={userProfile.profileImage} alt="Profile" className="profile-photo" />
           </div>
           <div className="profile-info">
-            <h2 className="profile-name">{profile.name}</h2>
+            <h2 className="profile-name">{userProfile.name}</h2>
             <p className="profile-title">
-              {profile.skills.split(",")[0] || "Professional"}
+              {userProfile.skills[0] || "Professional"}
             </p>
             <p className="profile-location">
-              <span className="icon">📍</span> {profile.location}
+              <span className="icon">📍</span> {userProfile.location}
             </p>
             <p className="profile-availability">Available Today</p>
           </div>
@@ -38,7 +58,7 @@ const ProfileDisplay = () => {
           <div className="skills-section">
             <h3 className="section-title">Skills</h3>
             <div className="skills-list">
-              {profile.skills.split(",").map((skill, index) => (
+              {userProfile.skills.map((skill, index) => (
                 <span key={index} className="skill-tag">
                   {skill.trim()}
                 </span>
@@ -48,9 +68,9 @@ const ProfileDisplay = () => {
           <div className="contact-section">
             <h3 className="section-title">Contact</h3>
             <div className="contact-buttons">
-              {profile.whatsapp && (
+              {userProfile.phoneNumber && (
                 <a
-                  href={`https://wa.me/${profile.whatsapp}`}
+                  href={`https://wa.me/${formatPhoneNumber( userProfile.phoneNumber).replace("+", "")}`}
                   className="whatsapp-button"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -58,19 +78,19 @@ const ProfileDisplay = () => {
                   WhatsApp
                 </a>
               )}
-              {profile.phone && (
-                <a href={`tel:${profile.phone}`} className="phone-button">
+              {userProfile.phoneNumbber && (
+                <a href={`tel:${formatPhoneNumber(userProfile.phone)}`} className="phone-button">
                   Call
                 </a>
               )}
-              {profile.facebook && (
+              {userProfile.email && (
                 <a
-                  href={`https://facebook.com/${profile.facebook}`}
+                  href={`https://facebook.com/${userProfile.facebook}`}
                   className="facebook-button"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Facebook
+                  <FaEnvelope />
                 </a>
               )}
             </div>

@@ -18,15 +18,15 @@ const CustomerProfile = ({ job }) => {
     <div className="customer-container">
       <div className="job-card-dark">
         <div className="job-photo-container">
-          <img src={job.photo} alt="Client" className="job-photo" />
+          <img src={job.profileImage?.url ? job.profileImage.url : '/user.png'} alt="Client" className="job-photo" />
         </div>
         <div className="job-header">
           <h2 className="job-name">{job.client}</h2>
-          <p className="job-category">Services Required: {job.category}</p>
+          <p className="job-category">Services Required: {job.services[0].toUpperCase()}</p>
           <p className="job-location">
             <span className="icon">📍</span> {job.location}
           </p>
-          <p className="job-timeline">📅Preferred Time: {job.timeline}</p>
+          <p className="job-timeline">📅Preferred Time: {job.preferredTime}</p>
         </div>
 
         <div className="job-section">
@@ -34,7 +34,7 @@ const CustomerProfile = ({ job }) => {
           <p className="job-description">{job.description}</p>
 
           <h3 className="section-title">Budget</h3>
-          <p className="job-budget">💰 {job.budget}</p>
+          <p className="job-budget">💰 Ksh. {job.budget}</p>
 
           <h3 className="section-title">Contact</h3>
           <div className="contact-buttons">
