@@ -75,7 +75,7 @@ input {
   font-size: 1rem;
 }
 
-button {
+.profile-form button {
   margin-top: 1rem;
   padding: 0.7rem 2rem;
   background: #007bff;
@@ -128,9 +128,9 @@ button:disabled {
   text-align: center;
   color: var(--primary-color);
 }
-input,
-textarea,
-button {
+.profile-form input,
+.profile-form textarea,
+.profile-form button {
   width: 100%;
   padding: 10px;
   font-size: 16px;
@@ -138,13 +138,13 @@ button {
   border: 1px solid var(--input-border);
 }
 
-textarea {
+.profile-form textarea {
   min-height: 80px;
   resize: vertical;
 }
 
 /* ===== Button ===== */
-button {
+.profile-form button {
   background-color: var(--primary-color);
   color: white;
   border: none;
@@ -155,7 +155,7 @@ button {
   transition: background-color 0.3s ease;
 }
 
-button:hover {
+.profile-form button:hover {
   background-color: #2e4fa1;
 }
 .avatar-container {

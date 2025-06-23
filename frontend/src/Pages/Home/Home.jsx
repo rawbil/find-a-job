@@ -13,15 +13,17 @@ import {
   FaSearch,
   FaUser,
   FaUserAlt,
+  FaSignOutAlt,
 } from "react-icons/fa";
 import ProfileDisplay from "../ProfileDisplay/ProfileDisplay";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AxiosError } from "axios";
 import {
   getAllProfilesService,
   getLatestProfilesService,
 } from "../../../utils/services/profile.service";
 //import { toast } from "react-hot-toast";
+import AppContext from "../../../utils/context/ContextFunc";
 
 const workersImg = "/workers-illustration.png";
 
@@ -33,6 +35,7 @@ export default function Home() {
   const [fetchError, setFetchError] = useState("");
 
   const [searchQuery, setSearchQuery] = useState("");
+  const {accessToken, handleLogout} = useContext(AppContext)
 
   useEffect(() => {
     const getLatestProfiles = async () => {
@@ -64,42 +67,11 @@ export default function Home() {
         setProfileLoading(false);
         setFetchError("");
       }
+      console.log("Access Token", accessToken)
     };
     //call the function
     getLatestProfiles();
-  }, [viewAllProfiles]);
-  // const featuredProviders = [
-  //   {
-  //     id: 1,
-  //     name: "James Mwangi",
-  //     skills: "Electrician, Residential wiring, Commercial wiring",
-  //     location: "Kisauni, Mombasa",
-  //     phone: "+254712345678",
-  //     whatsapp: "+254712345678",
-  //     facebook: "james.mwangi.electrician",
-  //     photo: "https://alexmwangikibaya.netlify.app/alex%202.jpg",
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Susan Achieng",
-  //     skills: "Plumbing, Pipe installation, Drainage",
-  //     location: "Kisumu",
-  //     phone: "+254712345679",
-  //     whatsapp: "+254712345679",
-  //     facebook: "susan.achieng.plumbing",
-  //     photo: "https://randomuser.me/api/portraits/women/44.jpg",
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "John Kamau",
-  //     skills: "Painting, Wall repair, Decorating",
-  //     location: "Nairobi",
-  //     phone: "+254712345670",
-  //     whatsapp: "+254712345670",
-  //     facebook: "john.kamau.painter",
-  //     photo: "https://randomuser.me/api/portraits/men/32.jpg",
-  //   },
-  // ];
+  }, [viewAllProfiles, accessToken]);
 
   const popularServices = [
     { name: "Plumbing", icon: <FaTools /> },
@@ -129,6 +101,8 @@ export default function Home() {
           <a href="/profile" className="btn">
             <FaUserAlt /> Profile
           </a>
+          {accessToken ? <button className="logout-btn" onClick={handleLogout}><FaSignOutAlt size={20} /> Logout</button> : <a href="/auth" className="login-btn">Login</a>}
+          
         </nav>
       </header>
 
