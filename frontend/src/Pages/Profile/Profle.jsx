@@ -153,32 +153,37 @@ export default function ProfileForm() {
       setLoading(false);
     }
   };
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <div className="profile-container">
-      <div style={{ display: "flex",
-      justifyContent: "center",
-      padding: "4px",
-      
-      borderRadius: "10px",
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          padding: "4px",
+          borderRadius: "10px",
           placeSelf: "start",
           marginLeft: "20%",
           cursor: "pointer",
           background: "royalblue",
-          width: "50px"}}>
-      <FaArrowLeft onClick={() => navigate(-1)} style={
-        {
-          color: "#fff",
-         
-        }
-      } size={20} /></div>
+          width: "50px",
+        }}
+      >
+        <FaArrowLeft
+          onClick={() => navigate(-1)}
+          style={{
+            color: "#fff",
+          }}
+          size={20}
+        />
+      </div>
       {userProfile && userProfile.name && !isEditing ? (
         <div className="profile-view">
           <button onClick={handleEditClick} className="edit-btn">
             Edit Profile
           </button>
-          
+
           <div className="avatar-container">
             <img
               src={
