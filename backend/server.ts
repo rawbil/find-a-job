@@ -1,0 +1,17 @@
+import { app } from "./app";
+import ConnectDb from "./utils/db";
+const PORT = process.env.PORT;
+require("dotenv").config();
+import {v2 as cloudinary} from 'cloudinary';
+
+//configure cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+})
+
+app.listen(PORT, () => {
+  console.log(`Server is listening on http://localhost:${PORT}`);
+  ConnectDb();
+});
