@@ -10,8 +10,8 @@ router.patch('/update', AuthMiddleware, UpdateUserProfile);
 //api/profile/get-profile
 router.get('/get-profile', AuthMiddleware, GetUserProfile);
 //api/profile/all
-router.get('/all', AuthMiddleware, GetAllUsersProfiles);
+router.get('/all', GetAllUsersProfiles); //should be visible by all users
 //api/profile/latest
-router.get('/latest', AuthMiddleware, GetLatestUsersProfiles);
+router.get('/latest',  GetLatestUsersProfiles); //should be visible by all users
 
 export default router;

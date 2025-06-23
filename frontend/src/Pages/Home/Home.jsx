@@ -10,25 +10,37 @@ import {
   FaPhone,
   FaPhoneAlt,
   FaEnvelope,
+  FaSearch,
 } from "react-icons/fa";
 import ProfileDisplay from "../ProfileDisplay/ProfileDisplay";
 import { useEffect, useState } from "react";
 import { AxiosError } from "axios";
-import { getLatestProfilesService } from "../../../utils/services/profile.service";
+import {
+  getAllProfilesService,
+  getLatestProfilesService,
+} from "../../../utils/services/profile.service";
 import { toast } from "react-hot-toast";
 
 const workersImg = "/workers-illustration.png";
 
 export default function Home() {
   const [latestProfiles, setLatestProfiles] = useState([]);
+  const [allProfiles, setAllProfiles] = useState([]);
+  const [viewAllProfiles, setViewAllProfiles] = useState(false);
+  const [profileLoading, setProfileLoading] = useState(false);
 
   useEffect(() => {
     const getLatestProfiles = async () => {
+      setProfileLoading(true);
       try {
-        const response = await getLatestProfilesService();
+        const response = viewAllProfiles
+          ? await getAllProfilesService()
+          : await getLatestProfilesService();
         console.log(response);
         if (response.success) {
-          setLatestProfiles(response.profiles);
+          viewAllProfiles
+            ? setAllProfiles(response.profiles)
+            : setLatestProfiles(response.profiles);
           console.log(response.message);
         } else {
           toast.error(response.message);
@@ -40,11 +52,13 @@ export default function Home() {
         } else {
           console.log(error.message);
         }
+      } finally {
+        setProfileLoading(false);
       }
     };
     //call the function
     getLatestProfiles();
-  }, []);
+  }, [viewAllProfiles]);
   // const featuredProviders = [
   //   {
   //     id: 1,
@@ -94,7 +108,7 @@ export default function Home() {
         </div>
         <nav className="home-nav">
           <a href="#services">Popular Services</a>
-          <button className="btn">Create Provider Profile</button>
+          <a href="/profile" className="btn">Create Provider Profile</a>
         </nav>
       </header>
 
@@ -107,10 +121,10 @@ export default function Home() {
             mechanic, JobJua makes it easy to discover and hire reliable service
             providers in your area.
           </p>
-          <div className="home-search-bar">
-            <input type="text" placeholder="Search for services..." />
-            <button>Search</button>
-          </div>
+          <form className="home-search-bar">
+            <input type="search" placeholder="Search for services..." />
+            <button><FaSearch size={20} /></button>
+          </form>
         </div>
         <div className="home-hero-illustration">
           <img
@@ -135,82 +149,99 @@ export default function Home() {
 
       <section className="featured-providers">
         <div className="section-header">
-          <h2>Featured Service Providers</h2>
-          <a href="#" className="view-all">
+          <h2>
+            {viewAllProfiles
+              ? "Browse Service Providers"
+              : "Featured Service Providers"}
+          </h2>
+          <p
+            className="view-all"
+            onClick={() => setViewAllProfiles(!viewAllProfiles)}
+          >
             View All
-          </a>
+          </p>
         </div>
         <div className="providers-scroll-container">
           <div className="providers-grid">
-            {latestProfiles.map((profile) => (
-              <div className="profile-card-dark">
-                <div className="profile-header">
-                  <div className="profile-photo-container">
-                    <img
-                      src={profile.profileImage.url}
-                      alt="Profile"
-                      className="profile-photo"
-                    />
-                  </div>
-                  <div className="profile-info">
-                    <h2 className="profile-name">{profile.name}</h2>
-                    <p className="profile-title">
-                      {(profile.skills[0] && profile.skills[0].toUpperCase()) ||
-                        "Professional"}
-                    </p>
-                    <p className="profile-location">
-                      <span className="icon">📍</span> {profile.location}
-                    </p>
-                    <p className="profile-availability">Available Today</p>
-                  </div>
-                </div>
-                <div className="profile-section">
-                  <div className="skills-section">
-                    <h3 className="section-title">Skills</h3>
-                    <div className="skills-list">
-                      {profile.skills.map((skill, index) => (
-                        <span key={index} className="skill-tag">
-                          {skill.trim()}
-                        </span>
-                      ))}
+            {!profileLoading
+              ? (viewAllProfiles ? allProfiles : latestProfiles).map(
+                  (profile) => (
+                    <div className="profile-card-dark">
+                      <div className="profile-header">
+                        <div className="profile-photo-container">
+                          <img
+                            src={profile.profileImage.url}
+                            alt="Profile"
+                            className="profile-photo"
+                          />
+                        </div>
+                        <div className="profile-info">
+                          <h2 className="profile-name">{profile.name}</h2>
+                          <p className="profile-title">
+                            {(profile.skills[0] &&
+                              profile.skills[0].toUpperCase()) ||
+                              "Professional"}
+                          </p>
+                          <p className="profile-location">
+                            <span className="icon">📍</span> {profile.location}
+                          </p>
+                          <p className="profile-availability">
+                            Available Today
+                          </p>
+                        </div>
+                      </div>
+                      <div className="profile-section">
+                        <div className="skills-section">
+                          <h3 className="section-title">Skills</h3>
+                          <div className="skills-list">
+                            {profile.skills.map((skill, index) => (
+                              <span key={index} className="skill-tag">
+                                {skill.trim()}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                        <div className="contact-section">
+                          <h3 className="section-title">Contact</h3>
+                          <div className="contact-buttons">
+                            {profile.phoneNumber && (
+                              <a
+                                href={`https://wa.me/${profile.phoneNumber}`}
+                                className="whatsapp-button"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <FaWhatsapp
+                                  className="whatsapp-icon"
+                                  size={20}
+                                />
+                              </a>
+                            )}
+                            {profile.phoneNumber && (
+                              <a
+                                href={`tel:${profile.phoneNumber}`}
+                                className="phone-button"
+                              >
+                                <FaPhoneAlt size={20} />
+                              </a>
+                            )}
+                            {profile.email && (
+                              <a
+                                href={`mailto:${profile.email}`}
+                                className="facebook-button"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                <FaEnvelope size={20} />
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="contact-section">
-                    <h3 className="section-title">Contact</h3>
-                    <div className="contact-buttons">
-                      {profile.phoneNumber && (
-                        <a
-                          href={`https://wa.me/${profile.phoneNumber}`}
-                          className="whatsapp-button"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <FaWhatsapp className="whatsapp-icon" size={20} />
-                        </a>
-                      )}
-                      {profile.phoneNumber && (
-                        <a
-                          href={`tel:${profile.phoneNumber}`}
-                          className="phone-button"
-                        >
-                          <FaPhoneAlt size={20} />
-                        </a>
-                      )}
-                      {profile.email && (
-                        <a
-                          href={`mailto:${profile.email}`}
-                          className="facebook-button"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <FaEnvelope size={20} />
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+                  )
+                )
+              : "Fetching service providers... be patient dude!!"}
           </div>
         </div>
       </section>
