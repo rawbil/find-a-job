@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import "./Auth.css";
 import { useFormik } from "formik";
 import { validateAuthSchema } from "../../../utils/auth.schema";
@@ -6,6 +6,7 @@ import { AxiosError } from "axios";
 import { authLogin, authRegister } from "../../../utils/services/auth.service";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import AppContext from "../../../utils/context/ContextFunc";
 
 const Auth = () => {
   // State for toggling between signup and login modes
@@ -13,6 +14,7 @@ const Auth = () => {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const [errorMessage, setErrormessage] = useState("");
+  const { setAccessToken } = useContext(AppContext);
 
   const onSubmit = async (values) => {
     try {
@@ -24,7 +26,11 @@ const Auth = () => {
       if (response.success) {
         isSignup ? setIsSignup(false) : navigate("/");
         toast.success(response.message);
-        //alert(response.message);
+        if (!isSignup) {
+          setAccessToken(response.access_token);
+          localStorage.setItem("access_token", response.access_token);
+          localStorage.setItem("user", JSON.stringify(response.user));
+        }
       } else {
         console.log(response.message);
         setErrormessage(response.message);

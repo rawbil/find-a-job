@@ -11,6 +11,8 @@ import {
   FaPhoneAlt,
   FaEnvelope,
   FaSearch,
+  FaUser,
+  FaUserAlt,
 } from "react-icons/fa";
 import ProfileDisplay from "../ProfileDisplay/ProfileDisplay";
 import { useEffect, useState } from "react";
@@ -125,7 +127,7 @@ export default function Home() {
         <nav className="home-nav">
           <a href="#services">Popular Services</a>
           <a href="/profile" className="btn">
-            Create Provider Profile
+            <FaUserAlt /> Profile
           </a>
         </nav>
       </header>
