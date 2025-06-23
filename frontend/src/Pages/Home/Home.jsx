@@ -314,12 +314,13 @@ export default function Home() {
                               target="_blank"
                               rel="noopener noreferrer"
                             >
+                              {/* 254 for whatsapp and +254 for tel */}
                               <FaWhatsapp className="whatsapp-icon" size={20} />
                             </a>
                           )}
                           {profile.phoneNumber && (
                             <a
-                              href={`tel:${profile.phoneNumber}`}
+                              href={`tel:${formatPhoneNumber(profile.phoneNumber)}`}
                               className="phone-button"
                             >
                               <FaPhoneAlt size={20} />

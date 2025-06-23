@@ -38,7 +38,7 @@ const CustomerProfile = ({ job }) => {
 
           <h3 className="section-title">Contact</h3>
           <div className="contact-buttons">
-            {job.whatsapp && (
+            {job.phoneNumber && (
               <a
                 href={`https://wa.me/${formatPhoneNumber(
                   job.phoneNumber
@@ -50,8 +50,8 @@ const CustomerProfile = ({ job }) => {
                 WhatsApp
               </a>
             )}
-            {job.phone && (
-              <a href={`tel:${job.phone}`} className="call-button">
+            {job.phoneNumber && (
+              <a href={`tel:${formatPhoneNumber(job.phone)}`} className="call-button">
                 Call
               </a>
             )}
