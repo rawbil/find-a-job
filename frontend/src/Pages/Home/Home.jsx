@@ -35,7 +35,7 @@ export default function Home() {
   const [fetchError, setFetchError] = useState("");
 
   const [searchQuery, setSearchQuery] = useState("");
-  const {accessToken, handleLogout} = useContext(AppContext)
+  const { accessToken, handleLogout } = useContext(AppContext);
 
   useEffect(() => {
     const getLatestProfiles = async () => {
@@ -67,7 +67,7 @@ export default function Home() {
         setProfileLoading(false);
         setFetchError("");
       }
-      console.log("Access Token", accessToken)
+      console.log("Access Token", accessToken);
     };
     //call the function
     getLatestProfiles();
@@ -101,8 +101,15 @@ export default function Home() {
           <a href="/profile" className="btn">
             <FaUserAlt /> Profile
           </a>
-          {accessToken ? <button className="logout-btn" onClick={handleLogout}><FaSignOutAlt size={20} /> Logout</button> : <a href="/auth" className="login-btn">Login</a>}
-          
+          {accessToken ? (
+            <button className="logout-btn" onClick={handleLogout}>
+              <FaSignOutAlt size={20} /> Logout
+            </button>
+          ) : (
+            <a href="/auth" className="login-btn">
+              Login
+            </a>
+          )}
         </nav>
       </header>
 
@@ -115,7 +122,6 @@ export default function Home() {
             mechanic, JobJua makes it easy to discover and hire reliable service
             providers in your area.
           </p>
-          
         </div>
         <div className="home-hero-illustration">
           <img
@@ -138,17 +144,17 @@ export default function Home() {
         </div>
       </section>
 
-      <form className="home-search-bar" onSubmit={(e) => e.preventDefault() }>
-            <input
-              type="search"
-              placeholder="Search for services..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <button>
-              <FaSearch size={20} />
-            </button>
-          </form>
+      <form className="home-search-bar" onSubmit={(e) => e.preventDefault()}>
+        <input
+          type="search"
+          placeholder="Search for services..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <button>
+          <FaSearch size={20} />
+        </button>
+      </form>
 
       <section className="featured-providers">
         <div className="section-header">
@@ -166,18 +172,22 @@ export default function Home() {
         </div>
         <div className="providers-scroll-container">
           <div className="providers-grid">
-            {profileLoading ? (
-              "Fetching service providers... be patient dude!!"
-            ) : fetchError.trim() ? (
-              "ooops... Error fetching providers. Check your internet connection"
-            ) : (
-              filterProfiles(viewAllProfiles ? allProfiles : latestProfiles).map(
-                (profile, idx) => (
+            {profileLoading
+              ? "Fetching service providers... be patient dude!!"
+              : fetchError.trim()
+              ? "ooops... Error fetching providers. Check your internet connection"
+              : filterProfiles(
+                  viewAllProfiles ? allProfiles : latestProfiles
+                ).map((profile, idx) => (
                   <div className="profile-card-dark" key={profile._id || idx}>
                     <div className="profile-header">
                       <div className="profile-photo-container">
                         <img
-                          src={profile.profileImage?.url}
+                          src={
+                            profile.profileImage?.url
+                              ? profile.profileImage.url
+                              : "/user.png"
+                          }
                           alt="Profile"
                           className="profile-photo"
                         />
@@ -192,9 +202,7 @@ export default function Home() {
                         <p className="profile-location">
                           <span className="icon">📍</span> {profile.location}
                         </p>
-                        <p className="profile-availability">
-                          Available Today
-                        </p>
+                        <p className="profile-availability">Available Today</p>
                       </div>
                     </div>
                     <div className="profile-section">
@@ -218,10 +226,7 @@ export default function Home() {
                               target="_blank"
                               rel="noopener noreferrer"
                             >
-                              <FaWhatsapp
-                                className="whatsapp-icon"
-                                size={20}
-                              />
+                              <FaWhatsapp className="whatsapp-icon" size={20} />
                             </a>
                           )}
                           {profile.phoneNumber && (
@@ -246,9 +251,7 @@ export default function Home() {
                       </div>
                     </div>
                   </div>
-                )
-              )
-            )}
+                ))}
           </div>
         </div>
       </section>
