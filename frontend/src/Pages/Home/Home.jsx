@@ -139,17 +139,7 @@ export default function Home() {
             mechanic, JobJua makes it easy to discover and hire reliable service
             providers in your area.
           </p>
-          <form className="home-search-bar" onSubmit={(e) => e.preventDefault() }>
-            <input
-              type="search"
-              placeholder="Search for services..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-            <button>
-              <FaSearch size={20} />
-            </button>
-          </form>
+          
         </div>
         <div className="home-hero-illustration">
           <img
@@ -171,6 +161,18 @@ export default function Home() {
           ))}
         </div>
       </section>
+
+      <form className="home-search-bar" onSubmit={(e) => e.preventDefault() }>
+            <input
+              type="search"
+              placeholder="Search for services..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <button>
+              <FaSearch size={20} />
+            </button>
+          </form>
 
       <section className="featured-providers">
         <div className="section-header">

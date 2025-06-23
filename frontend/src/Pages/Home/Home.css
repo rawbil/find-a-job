@@ -88,8 +88,8 @@
 
 .home-search-bar {
   display: flex;
-  max-width: 500px;
-  margin-top: 2rem;
+  max-width: 600px;
+  margin: 2rem auto;
 }
 
 .home-search-bar input {
