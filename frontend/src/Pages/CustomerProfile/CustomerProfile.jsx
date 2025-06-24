@@ -20,8 +20,9 @@ const CustomerProfile = ({ job }) => {
         <div className="job-photo-container">
           <img src={job.profileImage?.url ? job.profileImage.url : '/user.png'} alt="Client" className="job-photo" />
         </div>
+        
         <div className="job-header">
-          <h2 className="job-name">{job.client}</h2>
+          <h2 className="job-name">{job.name}</h2>
           <p className="job-category">Services Required: {job.services[0].toUpperCase()}</p>
           <p className="job-location">
             <span className="icon">📍</span> {job.location}

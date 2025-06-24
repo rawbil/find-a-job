@@ -27,47 +27,10 @@ import AppContext from "../../../utils/context/ContextFunc";
 import CustomerProfile from "../CustomerProfile/CustomerProfile";
 import { getLatestClientPosts } from "../../../utils/services/client.service";
 import { formatPhoneNumber } from "../../../utils/formatPhoneNumber";
+import AOS from 'aos';
+import 'aos/dist/aos.css'
 
 const workersImg = "/workers-illustration.png";
-
-// const featuredJobs = [
-//     {
-//       id: 1,
-//       client: "Jane Doe",
-//       category: "Plumbing",
-//       description: "Fix leaking kitchen pipe under the sink.",
-//       location: "Kisauni, Mombasa",
-//       budget: "Ksh 2,000",
-//       timeline: "3rd june ",
-//       whatsapp: "+254701206117",
-//       phone: "+254701206117",
-//       photo: "https://example.com/avatar1.jpg",
-//     },
-//     {
-//       id: 2,
-//       client: "John Smith",
-//       category: "Electrical",
-//       description: "Install new ceiling fans in living room and bedrooms.",
-//       location: "Nairobi West",
-//       budget: "Ksh 5,000",
-//       timeline: "Within 3 days",
-//       whatsapp: "+254712345679",
-//       phone: "+254712345679",
-//       photo: "https://example.com/avatar2.jpg",
-//     },
-//     {
-//       id: 3,
-//       client: "Mary Johnson",
-//       category: "Painting",
-//       description: "Paint entire 3-bedroom house interior.",
-//       location: "Kilimani",
-//       budget: "Ksh 15,000",
-//       timeline: "Next week",
-//       whatsapp: "+254712345670",
-//       phone: "+254712345670",
-//       photo: "https://example.com/avatar3.jpg",
-//     },
-//   ];
 
 export default function Home() {
   const [latestProfiles, setLatestProfiles] = useState([]);
@@ -84,6 +47,15 @@ export default function Home() {
   const [jobsLoading, setJobsLoading] = useState(false);
   const [jobsError, setJobsError] = useState("");
   const [jobSearchQuery, setJobSearchQuery] = useState("");
+
+    //aos animations
+  useEffect(() => {
+    AOS.init({
+      duration: 1200,
+      easing: 'ease-in-out',
+      once: false,
+    })
+  }, [])
 
   useEffect(() => {
     const getLatestProfiles = async () => {
@@ -201,7 +173,7 @@ export default function Home() {
         </nav>
       </header>
 
-      <section className="home-hero">
+      <section className="home-hero" data-aos='fade-up'>
         <div className="home-hero-text">
           <h1>Find Trusted Local Services Near You</h1>
           <p>
@@ -258,7 +230,7 @@ export default function Home() {
             View All
           </p>
         </div>
-        <div className="providers-scroll-container">
+        <div className="providers-scroll-container" data-aos='fade-up'>
           <div className="providers-grid">
             {profileLoading
               ? "Fetching service providers... be patient dude!!"
@@ -362,7 +334,7 @@ export default function Home() {
         </button>
       </form>
       {/* Clients posting jobs */}
-      <section className="featured-providers" id="jobs">
+      <section className="featured-providers" id="jobs" data-aos='fade-up'>
         <div className="section-header">
           <h2>Featured Jobs</h2>
           <p className="view-all">View All</p>

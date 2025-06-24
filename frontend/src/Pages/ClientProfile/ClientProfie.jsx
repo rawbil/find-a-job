@@ -35,15 +35,20 @@ export default function ClientProfile() {
         const response = await getClientPost();
         if (response.success) {
           setClientProfile(response.profile);
+          setError(""); // clear any previous error
         } else {
-          toast.error(response.message);
+          setError(response.message || "Profile not found");
+          setClientProfile({});
         }
       } catch (error) {
         if (error instanceof AxiosError) {
-          toast.error(error.message);
+          setError(error.response?.data?.message || error.message || "An error occurred");
+        } else if (typeof error === "object" && error !== null && "message" in error) {
+          setError(error.message);
         } else {
-          toast.error("An unexpected error occurred");
+          setError("An unexpected error occurred");
         }
+        setClientProfile({});
       }
     };
     fetchProfile();
@@ -77,25 +82,25 @@ export default function ClientProfile() {
       // Build payload with only changed fields
       const payload = {};
       Object.keys(editForm).forEach((key) => {
-        // Compare with original userProfile
+        // Compare with original clientProfile
         if (
-          key === "skills"
-            ? editForm.skills
+          key === "services"
+            ? editForm.services
                 .split(",")
                 .map((s) => s.trim())
                 .filter(Boolean)
-                .join(",") !== (clientProfile.skills || []).join(",")
+                .join(",") !== (clientProfile.services || []).join(",")
             : editForm[key] !== clientProfile[key]
         ) {
           payload[key] = editForm[key];
         }
       });
 
-      // Handle skills array conversion
-      if (payload.skills) {
-        payload.skills = payload.skills
+      // Handle services array conversion
+      if (payload.services) {
+        payload.services = payload.services
           .split(",")
-          .map((skill) => skill.trim())
+          .map((service) => service.trim())
           .filter(Boolean);
       }
 
@@ -190,7 +195,6 @@ export default function ClientProfile() {
       className="profile-container scrollable-profile"
       style={{ position: "relative" }}
     >
-      {/* ...back button... */}
       <div
         style={{
           display: "flex",
@@ -204,17 +208,127 @@ export default function ClientProfile() {
           width: "50px",
           position: "absolute",
           top: "100px",
-        }}
+        }} onClick={() => navigate(-1)}
       >
         <FaArrowLeft
-          onClick={() => navigate(-1)}
+         
           style={{
             color: "#fff",
           }}
           size={20}
         />
       </div>
-      {clientProfile && clientProfile.name && !isEditing ? (
+      {error && !clientProfile.name ? (
+        <div className="profile-form">
+          <h2>{error}</h2>
+          {/* Show the create profile form */}
+          <form>
+            <div className="avatar-container">
+              <label htmlFor="photo-upload" className="avatar-label">
+                {formData.profileImage ? (
+                  <img
+                    src={formData.profileImage}
+                    alt="Profile"
+                    className="avatar"
+                  />
+                ) : (
+                  <div className="avatar-placeholder">
+                    <span className="camera-icon">📷</span>
+                  </div>
+                )}
+              </label>
+              <input
+                id="photo-upload"
+                type="file"
+                accept="image/*"
+                name="profileImage"
+                onChange={handlePhotoUpload}
+                style={{ display: "none" }}
+              />
+            </div>
+            <div className="form-row">
+              <label>
+                Name
+                <input
+                  name="name"
+                  placeholder="Name"
+                  value={formData.name}
+                  onChange={handleChange}
+                />
+              </label>
+              <label>
+                Email
+                <input
+                  name="email"
+                  placeholder="Email"
+                  value={formData.email}
+                  onChange={handleChange}
+                />
+              </label>
+            </div>
+            <div className="form-row">
+              <label>
+                Location
+                <input
+                  name="location"
+                  placeholder="Location"
+                  value={formData.location}
+                  onChange={handleChange}
+                />
+              </label>
+              <label>
+                Phone Number
+                <input
+                  name="phoneNumber"
+                  placeholder="Phone Number"
+                  value={formData.phoneNumber}
+                  onChange={handleChange}
+                />
+              </label>
+              <label>
+                Budget
+                <input
+                  name="budget"
+                  placeholder="Budget"
+                  value={formData.budget}
+                  onChange={handleChange}
+                />
+              </label>
+            </div>
+            <label>
+              Services (comma separated)
+              <input
+                name="services"
+                placeholder="Services (comma separated)"
+                value={formData.services}
+                onChange={handleChange}
+              />
+            </label>
+            <label>
+              Preferred Time
+              <input
+                name="preferredTime"
+                placeholder="Preferred Time"
+                value={formData.preferredTime}
+                onChange={handleChange}
+              />
+            </label>
+            <label>
+              Description
+              <textarea
+                name="description"
+                placeholder="Description"
+                value={formData.description}
+                onChange={handleChange}
+                rows={3}
+              />
+            </label>
+            <button type="button" onClick={saveProfile} disabled={loading}>
+              {loading ? "Saving..." : "Create Profile"}
+            </button>
+          </form>
+        </div>
+      ) : clientProfile && clientProfile.name && !isEditing ? (
         <div className="profile-view">
           <button onClick={handleEditClick} className="edit-btn">
             Edit Profile
@@ -224,7 +338,7 @@ export default function ClientProfile() {
               src={
                 clientProfile.profileImage?.url ||
                 clientProfile.profileImage ||
-                "/default-avatar.png"
+                "/user.png"
               }
               alt="Profile"
               className="profile-avatar"
@@ -396,117 +510,8 @@ export default function ClientProfile() {
             </button>
           </div>
         </form>
-      ) : (
-        <>
-          {error && <p style={{ color: "red" }}>{error}</p>}
-          <form className="profile-form">
-            <h2>Create Profile</h2>
-            <div className="avatar-container">
-              <label htmlFor="photo-upload" className="avatar-label">
-                {formData.profileImage ? (
-                  <img
-                    src={formData.profileImage}
-                    alt="Profile"
-                    className="avatar"
-                  />
-                ) : (
-                  <div className="avatar-placeholder">
-                    <span className="camera-icon">📷</span>
-                  </div>
-                )}
-              </label>
-              <input
-                id="photo-upload"
-                type="file"
-                accept="image/*"
-                name="profileImage"
-                onChange={handlePhotoUpload}
-                style={{ display: "none" }}
-              />
-            </div>
-
-            <div className="form-row">
-              <label>
-                Name
-                <input
-                  name="name"
-                  placeholder="Name"
-                  value={formData.name}
-                  onChange={handleChange}
-                />
-              </label>
-              <label>
-                Email
-                <input
-                  name="email"
-                  placeholder="Email"
-                  value={formData.email}
-                  onChange={handleChange}
-                />
-              </label>
-            </div>
-            <div className="form-row">
-              <label>
-                Location
-                <input
-                  name="location"
-                  placeholder="Location"
-                  value={formData.location}
-                  onChange={handleChange}
-                />
-              </label>
-              <label>
-                Phone Number
-                <input
-                  name="phoneNumber"
-                  placeholder="Phone Number"
-                  value={formData.phoneNumber}
-                  onChange={handleChange}
-                />
-              </label>
-              <label>
-                Budget
-                <input
-                  name="budget"
-                  placeholder="Budget"
-                  value={formData.budget}
-                  onChange={handleChange}
-                />
-              </label>
-            </div>
-            <label>
-              Services (comma separated)
-              <input
-                name="services"
-                placeholder="Services (comma separated)"
-                value={formData.services}
-                onChange={handleChange}
-              />
-            </label>
-            <label>
-              Preferred Time
-              <input
-                name="preferredTime"
-                placeholder="Preferred Time"
-                value={formData.preferredTime}
-                onChange={handleChange}
-              />
-            </label>
-            <label>
-              Description
-              <textarea
-                name="description"
-                placeholder="Description"
-                value={formData.description}
-                onChange={handleChange}
-                rows={3}
-              />
-            </label>
-            <button type="button" onClick={saveProfile} disabled={loading}>
-              {loading ? "Saving..." : "Create Profile"}
-            </button>
-          </form>
-        </>
+      ) :(
+        <div>Loading...</div>
       )}
     </div>
   );

@@ -7,8 +7,7 @@ import {
   updateUserProfileService,
 } from "../../../utils/services/profile.service";
 import toast from "react-hot-toast";
-//import { useNavigate } from "react-router-dom";
-import { FaArrowLeft, FaPen } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 export default function ProviderProfile() {
@@ -25,7 +24,7 @@ export default function ProviderProfile() {
   const [userProfile, setuserProfile] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({});
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getProfile = async () => {
@@ -33,18 +32,20 @@ export default function ProviderProfile() {
         const response = await getUserProfile();
         if (response.success) {
           setuserProfile(response.profile);
-          console.log(response.profile);
+          setError(""); // clear any previous error
         } else {
-          console.log(response.message);
-          toast.error(response.message);
+          setError(response.message || "Profile not found");
+          setuserProfile({}); // clear profile
         }
       } catch (error) {
         if (error instanceof AxiosError) {
-          console.log(error);
-          toast.error(error);
+          setError(error.response?.data?.message || error.message || "An error occurred");
+        } else if (typeof error === "object" && error !== null && "message" in error) {
+          setError(error.message);
         } else {
-          console.log(error.message);
+          setError("An unexpected error occurred");
         }
+        setuserProfile({});
       }
     };
 
@@ -74,40 +75,41 @@ export default function ProviderProfile() {
     setError("");
     try {
       // Build payload with only changed fields
-    const payload = {};
-    Object.keys(editForm).forEach((key) => {
-      // Compare with original userProfile
-      if (
-        key === "skills"
-          ? editForm.skills.split(",").map(s => s.trim()).filter(Boolean).join(",") !== (userProfile.skills || []).join(",")
-          : editForm[key] !== userProfile[key]
-      ) {
-        payload[key] = editForm[key];
+      const payload = {};
+      Object.keys(editForm).forEach((key) => {
+        // Compare with original userProfile
+        if (
+          key === "skills"
+            ? editForm.skills.split(",").map(s => s.trim()).filter(Boolean).join(",") !== (userProfile.skills || []).join(",")
+            : editForm[key] !== userProfile[key]
+        ) {
+          payload[key] = editForm[key];
+        }
+      });
+
+      // Handle skills array conversion
+      if (payload.skills) {
+        payload.skills = payload.skills
+          .split(",")
+          .map((skill) => skill.trim())
+          .filter(Boolean);
       }
-    });
 
-    // Handle skills array conversion
-    if (payload.skills) {
-      payload.skills = payload.skills
-        .split(",")
-        .map((skill) => skill.trim())
-        .filter(Boolean);
-    }
+      // Only send profileImage if it's a new file (base64, not URL)
+      if (
+        payload.profileImage &&
+        (payload.profileImage.startsWith("http") || payload.profileImage.startsWith("/"))
+      ) {
+        delete payload.profileImage;
+      }
 
-    // Only send profileImage if it's a new file (base64, not URL)
-    if (
-      payload.profileImage && (payload.profileImage.startsWith("http") || payload.profileImage.startsWith("/"))
-    ) {
-      delete payload.profileImage;
-    }
-
-    // If nothing changed, don't send request
-    if (Object.keys(payload).length === 0) {
-      toast("No changes to update.");
-      setIsEditing(false);
-      setLoading(false);
-      return;
-    }
+      // If nothing changed, don't send request
+      if (Object.keys(payload).length === 0) {
+        toast("No changes to update.");
+        setIsEditing(false);
+        setLoading(false);
+        return;
+      }
 
       const response = await updateUserProfileService(payload);
       if (response.success) {
@@ -121,11 +123,11 @@ export default function ProviderProfile() {
       }
     } catch (error) {
       if (error instanceof AxiosError) {
+        setError(error.response?.data?.message || error.message || "An error occurred");
+      } else if (typeof error === "object" && error !== null && "message" in error) {
         setError(error.message);
-        console.log(error.message);
       } else {
-        console.log("An unexpected error occurred when updating profile");
-        setError(error.message)
+        setError("An unexpected error occurred");
       }
     } finally {
       setLoading(false);
@@ -164,7 +166,6 @@ export default function ProviderProfile() {
       const response = await createUserProfileService(payload);
       if (response.success) {
         toast.success(response.message);
-        //navigate("/");
         setuserProfile(response.profile);
         setIsEditing(false);
       } else {
@@ -173,15 +174,16 @@ export default function ProviderProfile() {
       }
     } catch (error) {
       if (error instanceof AxiosError) {
+        setError(error.response?.data?.message || error.message || "An error occurred");
+      } else if (typeof error === "object" && error !== null && "message" in error) {
         setError(error.message);
       } else {
-        setError("An unexpected error occurred when creating profile");
+        setError("An unexpected error occurred");
       }
     } finally {
       setLoading(false);
     }
   };
-  const navigate = useNavigate();
 
   return (
     <div className="profile-container">
@@ -196,10 +198,10 @@ export default function ProviderProfile() {
           cursor: "pointer",
           background: "royalblue",
           width: "50px",
-        }}
+        }}onClick={() => navigate(-1)}
       >
         <FaArrowLeft
-          onClick={() => navigate(-1)}
+          
           style={{
             color: "#fff",
           }}
@@ -217,7 +219,7 @@ export default function ProviderProfile() {
               src={
                 userProfile.profileImage?.url ||
                 userProfile.profileImage ||
-                "/default-avatar.png"
+                "/user.png"
               }
               alt="Profile"
               className="profile-avatar"
