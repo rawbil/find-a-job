@@ -182,7 +182,7 @@ export default function Home() {
         </div>
         <nav className="home-nav">
           <a href="#services">Popular Services</a>
-          <a href="#jobs">Popular Jobs</a>
+          <a href="#jobs">Client Jobs</a>
           {accessToken && (
             <a href="/profile" className="btn">
               <FaUserAlt /> Profile

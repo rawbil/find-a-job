@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import createApi from "../axios.create-api";
+import createApi, { handleTokenExpiration } from "../axios.create-api";
 
 //create
 export const createClientPost = async (data) => {
@@ -10,6 +10,9 @@ export const createClientPost = async (data) => {
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
+      throw error;
+    } else if (error.message === 'TOKEN_EXPIRED') {
+      handleTokenExpiration();
       throw error;
     } else {
       throw new Error("An unexpected error occurred when creating post");
@@ -27,6 +30,9 @@ export const updateClientPost = async (data) => {
   } catch (error) {
     if (error instanceof AxiosError) {
       throw error;
+    } else if (error.message === 'TOKEN_EXPIRED') {
+      handleTokenExpiration();
+      throw error;
     } else {
       throw new Error("An unexpected error occurred when fetching profile");
     }
@@ -42,6 +48,9 @@ export const getClientPost = async () => {
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
+      throw error;
+    } else if (error.message === 'TOKEN_EXPIRED') {
+      handleTokenExpiration();
       throw error;
     } else {
       throw new Error("An unexpected error occurred when updating post");
@@ -59,8 +68,11 @@ export const getClientPosts = async () => {
   } catch (error) {
     if (error instanceof AxiosError) {
       throw error;
+    } else if (error.message === 'TOKEN_EXPIRED') {
+      handleTokenExpiration();
+      throw error;
     } else {
-      throw new Error("An unexpected error occurred when updating post");
+      throw new Error("An unexpected error occurred when fetching all posts");
     }
   }
 };
@@ -74,6 +86,9 @@ export const getLatestClientPosts = async () => {
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
+      throw error;
+    } else if (error.message === 'TOKEN_EXPIRED') {
+      handleTokenExpiration();
       throw error;
     } else {
       throw new Error("An unexpected error occurred when fetching latest posts");

@@ -1,0 +1,26 @@
+
+.scrollable-profile {
+  min-height: 100vh;
+  overflow-y: auto;
+  padding-bottom: 2rem;
+}
+
+.profile-form label {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-row label {
+  flex: 1;
+  min-width: 120px;
+}

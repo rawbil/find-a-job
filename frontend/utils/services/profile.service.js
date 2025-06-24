@@ -1,6 +1,5 @@
 import { AxiosError } from "axios"
-import createApi from "../axios.create-api"
-
+import createApi, { handleTokenExpiration } from "../axios.create-api"
 
 //get the 20 latest profiles
 export const getLatestProfilesService = async() => {
@@ -10,6 +9,9 @@ export const getLatestProfilesService = async() => {
     } catch (error) {
         if(error instanceof AxiosError) {
             throw error
+        } else if (error.message === 'TOKEN_EXPIRED') {
+            handleTokenExpiration();
+            throw error;
         } else {
             throw new Error("An unexpected error occurred when fetching latest profiles")
         }
@@ -24,6 +26,9 @@ export const getAllProfilesService = async() => {
     } catch (error) {
         if(error instanceof AxiosError) {
             throw error
+        } else if (error.message === 'TOKEN_EXPIRED') {
+            handleTokenExpiration();
+            throw error;
         } else {
             throw new Error("An unexpected error occurred when fetching latest profiles")
         }
@@ -40,6 +45,9 @@ export const getUserProfile = async() => {
     } catch (error) {
         if(error instanceof AxiosError) {
             throw error
+        } else if (error.message === 'TOKEN_EXPIRED') {
+            handleTokenExpiration();
+            throw error;
         } else {
             throw new Error("An unexpected error occurred when fetching user profile")
         }
@@ -54,6 +62,9 @@ export const createUserProfileService = async(data) => {
     } catch (error) {
            if(error instanceof AxiosError) {
             throw error
+        } else if (error.message === 'TOKEN_EXPIRED') {
+            handleTokenExpiration();
+            throw error;
         } else {
             throw new Error("An unexpected error occurred while creating profile")
         }
@@ -68,6 +79,9 @@ export const updateUserProfileService = async(data) => {
     } catch (error) {
            if(error instanceof AxiosError) {
             throw error
+        } else if (error.message === 'TOKEN_EXPIRED') {
+            handleTokenExpiration();
+            throw error;
         } else {
             throw new Error("An unexpected error occurred while updating profile")
         }

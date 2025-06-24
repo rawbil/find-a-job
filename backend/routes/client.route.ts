@@ -16,7 +16,7 @@ router.post("/create", AuthMiddleware, CreateUserProfile);
 
 // Update client profile (protected)
 //api/client/update
-router.put("/update", AuthMiddleware, UpdateUserProfile);
+router.patch("/update", AuthMiddleware, UpdateUserProfile);
 
 // Get current user's client profile (protected)
 //api/client/get-profile
