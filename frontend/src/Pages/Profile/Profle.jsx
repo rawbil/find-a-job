@@ -18,7 +18,7 @@ export default function UserProfile() {
           className="profile-choice-btn"
           onClick={() => navigate("/profile/client")}
         >
-          Client Profile
+          Client Posts
         </button>
       </div>
     </div>
