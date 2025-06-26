@@ -1,26 +1,305 @@
+.client-container {
+  width: 100%;
+  background-color: #1e1e1e;
+}
 
-.scrollable-profile {
+.client-profile-container {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    sans-serif;
+
+  color: #1a1a1a;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 20px;
   min-height: 100vh;
-  overflow-y: auto;
-  padding-bottom: 2rem;
 }
 
-.profile-form label {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+/* Headings */
+h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+/* Error message */
+p[style*="color: red"] {
+  color: #e63946;
+  font-size: 0.9rem;
+  text-align: center;
   margin-bottom: 1rem;
-  font-weight: 500;
-  color: #333;
 }
 
-.form-row {
+/* Add New Post button */
+.client-edit-btn {
+  background-color: #f28c38;
+  color: #ffffff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 auto 1.5rem;
+}
+
+.client-edit-btn:hover {
+  background-color: #e07b30;
+  transform: translateY(-2px);
+}
+
+.client-edit-btn:active {
+  transform: translateY(0);
+}
+
+/* Post cards */
+.client-posts-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.client-profile-view {
+  background-color: whitesmoke;
+  color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 1.5rem;
+  width: 320px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  transition: box-shadow 0.3s ease;
+}
+
+.client-profile-view:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Avatar styling */
+.client-avatar-container {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.client-profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e0e0;
+}
+
+/* Card content */
+.client-profile-view h3 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+}
+
+.client-profile-view p {
+  font-size: 0.9rem;
+  color: #4a4a4a;
+  margin-bottom: 0.5rem;
+}
+
+.client-skills-list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.client-skill-tag {
+  background-color: #f28c38;
+  color: #ffffff;
+  padding: 0.3rem 0.6rem;
+  border-radius: 5px;
+  font-size: 0.8rem;
+}
+
+/* Edit and Delete buttons */
+.client-profile-view button {
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.client-profile-view .client-edit-btn {
+  background-color: #f28c38;
+  color: #ffffff;
+}
+
+.client-profile-view .client-edit-btn:hover {
+  background-color: #e07b30;
+}
+
+.client-profile-view .client-cancel-btn {
+  background-color: #e63946;
+  color: #ffffff;
+}
+
+.client-profile-view .client-cancel-btn:hover {
+  background-color: #d32f2f;
+}
+
+/* Form styling */
+.client-profile-form {
+  background-color: #f9f9f9;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 1.5rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.client-form-row {
   display: flex;
   gap: 1rem;
   margin-bottom: 1rem;
 }
 
-.form-row label {
+.client-form-row label {
   flex: 1;
-  min-width: 120px;
+}
+
+.client-profile-form label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #1a1a1a;
+  margin-bottom: 0.3rem;
+}
+
+.client-profile-form input,
+.client-profile-form textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  transition: border-color 0.3s ease;
+}
+
+.client-profile-form input:focus,
+.client-profile-form textarea:focus {
+  outline: none;
+  border-color: #f28c38;
+}
+
+.client-profile-form textarea {
+  resize: vertical;
+}
+
+.client-avatar-label {
+  display: inline-block;
+  cursor: pointer;
+}
+
+.client-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e0e0e0;
+}
+
+.client-avatar-placeholder {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.client-camera-icon {
+  font-size: 2rem;
+  color: #4a4a4a;
+}
+
+.client-profile-form button {
+  background-color: #f28c38;
+  color: #ffffff;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.client-profile-form button:hover {
+  background-color: #e07b30;
+  transform: translateY(-2px);
+}
+
+.client-profile-form button:active {
+  transform: translateY(0);
+}
+
+.client-profile-form .client-cancel-btn {
+  background-color: #e63946;
+}
+
+.client-profile-form .client-cancel-btn:hover {
+  background-color: #d32f2f;
+}
+
+/* Back button */
+div[style*="background: royalblue"] {
+  background-color: #1a73e8 !important;
+  border-radius: 10px;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+div[style*="background: royalblue"]:hover {
+  background-color: #1557b0 !important;
+}
+
+/* Loading state */
+div[style*="Loading..."] {
+  text-align: center;
+  font-size: 1rem;
+  color: #4a4a4a;
+  margin-top: 1rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .client-profile-container {
+    padding: 1.5rem 15px;
+  }
+
+  .client-form-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .client-profile-view {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .client-edit-btn {
+    padding: 0.6rem 1.2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+  }
 }

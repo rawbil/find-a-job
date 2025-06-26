@@ -21,9 +21,9 @@ export const createClientPost = async (data) => {
 };
 
 //update
-export const updateClientPost = async (data) => {
+export const updateClientPost = async (postId, data) => {
   try {
-    const response = await createApi.patch("/client/update", data, {
+    const response = await createApi.patch(`/client/update/${postId}`, data, {
       withCredentials: true,
     });
     return response.data;
@@ -40,9 +40,9 @@ export const updateClientPost = async (data) => {
 };
 
 //get profile
-export const getClientPost = async () => {
+export const getClientPost = async (postId) => {
   try {
-    const response = await createApi.get("/client/get-profile", {
+    const response = await createApi.get(`/client/get-profile/${postId}`, {
       withCredentials: true,
     });
     return response.data;
@@ -81,6 +81,26 @@ export const getClientPosts = async () => {
 export const getLatestClientPosts = async () => {
   try {
     const response = await createApi.get("/client/latest", {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    if (error instanceof AxiosError) {
+      throw error;
+    } else if (error.message === 'TOKEN_EXPIRED') {
+      handleTokenExpiration();
+      throw error;
+    } else {
+      throw new Error("An unexpected error occurred when fetching latest posts");
+    }
+  }
+};
+
+
+//delete
+export const deleteClientPost = async (postId) => {
+  try {
+    const response = await createApi.delete(`/client/delete/${postId}`, {
       withCredentials: true,
     });
     return response.data;

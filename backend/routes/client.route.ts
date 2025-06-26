@@ -1,10 +1,12 @@
 import express from "express";
 import {
   CreateUserProfile,
-  UpdateUserProfile,
+  //UpdateUserProfile,
   GetUserProfile,
   GetAllUsersProfiles,
   GetLatestUsersProfiles,
+  UpdateClientPost,
+  DeleteClientPost,
 } from "../controllers/client.controller";
 import AuthMiddleware from "../middleware/auth.middleware";
 
@@ -15,12 +17,18 @@ const router = express.Router();
 router.post("/create", AuthMiddleware, CreateUserProfile);
 
 // Update client profile (protected)
-//api/client/update
-router.patch("/update", AuthMiddleware, UpdateUserProfile);
+//api/client/update/:id
+//router.patch("/update", AuthMiddleware, UpdateUserProfile);
+router.patch('/update/:id', AuthMiddleware, UpdateClientPost);
+
+//delete
+//api/client/delete/:id
+router.delete('/delete/:id', AuthMiddleware, DeleteClientPost);
+
 
 // Get current user's client profile (protected)
-//api/client/get-profile
-router.get("/get-profile", AuthMiddleware, GetUserProfile);
+//api/client/get-profile/:id
+router.get("/get-profile/:id", AuthMiddleware, GetUserProfile);
 
 // Get all client profiles (public or protected as needed)
 //api/client/profiles

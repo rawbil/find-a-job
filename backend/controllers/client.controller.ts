@@ -123,8 +123,100 @@ interface IUpdateProfile {
   phoneNumber?: string;
   email?: string;
 }
+//
+// export const UpdateUserProfile = async (
+//   req: Request,
+//   res: Response,
+//   next: NextFunction
+// ) => {
+//   try {
+//     const data = req.body as IUpdateProfile;
+//     const userId = req.user?._id as string;
+//
+//     // Check if updated email exists (and is not the current user's email)
+//     if (data.email) {
+//       const isProfileEmailExists = await clientModel.findOne({
+//         email: data.email as string,
+//         user: { $ne: userId },
+//       });
+//       if (isProfileEmailExists) {
+//         return next(
+//           new ErrorHandler(
+//             "Another profile with this email exists, can you provide a different one?",
+//             409
+//           )
+//         );
+//       }
+//     }
+//
+//     // Get profile from DB
+//     const savedProfile = (await clientModel.findOne({
+//       user: userId,
+//     })) as IClientProfile;
+//     if (!savedProfile) {
+//       return next(new ErrorHandler("Profile not found", 404));
+//     }
+//
+//     // Update cloudinary image if changed
+//     if (data.profileImage) {
+//       if (savedProfile.profileImage?.public_id) {
+//         try {
+//           // Delete existing image from cloudinary before uploading the new one
+//           await cloudinary.v2.uploader.destroy(
+//             savedProfile.profileImage?.public_id
+//           );
+//
+//           // Add the new image to cloudinary
+//           const myCloud = await cloudinary.v2.uploader.upload(
+//             data.profileImage as string,
+//             {
+//               folder: "Kazi-Profiles",
+//             }
+//           );
+//           data.profileImage = {
+//             public_id: myCloud.public_id,
+//             url: myCloud.secure_url,
+//           };
+//         } catch (error: any) {
+//           return next(new ErrorHandler(error.message, 500));
+//         }
+//       } else {
+//         try {
+//           const myCloud = await cloudinary.v2.uploader.upload(
+//             data.profileImage as string,
+//             {
+//               folder: "Kazi-Profiles",
+//             }
+//           );
+//           data.profileImage = {
+//             public_id: myCloud.public_id,
+//             url: myCloud.secure_url,
+//           };
+//         } catch (error: any) {
+//           return next(new ErrorHandler(error.message, 500));
+//         }
+//       }
+//     }
+//
+//     const updatedProfile = await clientModel.findByIdAndUpdate(
+//       savedProfile._id,
+//       {
+//         $set: data,
+//       },
+//       { new: true }
+//     );
+//
+//     res.status(200).json({
+//       success: true,
+//       updatedProfile,
+//       message: "Profile updated successfully",
+//     });
+//   } catch (error: any) {
+//     return next(new ErrorHandler(error.message, 500));
+//   }
+// };
 
-export const UpdateUserProfile = async (
+export const UpdateClientPost = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -132,46 +224,45 @@ export const UpdateUserProfile = async (
   try {
     const data = req.body as IUpdateProfile;
     const userId = req.user?._id as string;
+    const postId = req.params.id;
+
+    // Find the post by ID
+    const savedPost = (await clientModel.findById(postId)) as IClientProfile;
+    if (!savedPost) {
+      return next(new ErrorHandler("Post not found", 404));
+    }
+
+    // Check ownership
+    if (savedPost.user?.toString() !== userId?.toString()) {
+      return next(new ErrorHandler("Unauthorized", 403));
+    }
 
     // Check if updated email exists (and is not the current user's email)
     if (data.email) {
       const isProfileEmailExists = await clientModel.findOne({
         email: data.email as string,
-        user: { $ne: userId },
+        _id: { $ne: postId },
       });
       if (isProfileEmailExists) {
         return next(
           new ErrorHandler(
-            "Another profile with this email exists, can you provide a different one?",
+            "Another post with this email exists, can you provide a different one?",
             409
           )
         );
       }
     }
 
-    // Get profile from DB
-    const savedProfile = (await clientModel.findOne({
-      user: userId,
-    })) as IClientProfile;
-    if (!savedProfile) {
-      return next(new ErrorHandler("Profile not found", 404));
-    }
-
     // Update cloudinary image if changed
     if (data.profileImage) {
-      if (savedProfile.profileImage?.public_id) {
+      if (savedPost.profileImage?.public_id) {
         try {
-          // Delete existing image from cloudinary before uploading the new one
           await cloudinary.v2.uploader.destroy(
-            savedProfile.profileImage?.public_id
+            savedPost.profileImage.public_id
           );
-
-          // Add the new image to cloudinary
           const myCloud = await cloudinary.v2.uploader.upload(
             data.profileImage as string,
-            {
-              folder: "Kazi-Profiles",
-            }
+            { folder: "Kazi-Profiles" }
           );
           data.profileImage = {
             public_id: myCloud.public_id,
@@ -184,9 +275,7 @@ export const UpdateUserProfile = async (
         try {
           const myCloud = await cloudinary.v2.uploader.upload(
             data.profileImage as string,
-            {
-              folder: "Kazi-Profiles",
-            }
+            { folder: "Kazi-Profiles" }
           );
           data.profileImage = {
             public_id: myCloud.public_id,
@@ -198,33 +287,31 @@ export const UpdateUserProfile = async (
       }
     }
 
-    const updatedProfile = await clientModel.findByIdAndUpdate(
-      savedProfile._id,
-      {
-        $set: data,
-      },
+    const updatedPost = await clientModel.findByIdAndUpdate(
+      postId,
+      { $set: data },
       { new: true }
     );
 
     res.status(200).json({
       success: true,
-      updatedProfile,
-      message: "Profile updated successfully",
+      updatedProfile: updatedPost,
+      message: "Post updated successfully",
     });
   } catch (error: any) {
     return next(new ErrorHandler(error.message, 500));
   }
 };
 
-//!GET USER PROFILE
+//!GET USER POST
 export const GetUserProfile = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const userId = req.user?._id as string;
-    const profile = await clientModel.findOne({ user: userId });
+    const postId = req.params.id;
+    const profile = await clientModel.findById(postId);
     if (!profile) {
       return next(new ErrorHandler("Profile not found", 404));
     }
@@ -235,14 +322,14 @@ export const GetUserProfile = async (
   }
 };
 
-//!GET ALL PROFILES
+//!GET ALL POSTS
 export const GetAllUsersProfiles = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const profiles = await clientModel.find().limit(20);
+    const profiles = await clientModel.find().limit(20).sort({updatedAt: -1});
     if (profiles.length === 0) {
       return next(new ErrorHandler("No Profile to display", 404));
     }
@@ -266,6 +353,47 @@ export const GetLatestUsersProfiles = async (
     }
 
     res.status(200).json({ success: true, profiles });
+  } catch (error: any) {
+    return next(new ErrorHandler(error.message, 500));
+  }
+};
+
+//!DELETE a POST
+export const DeleteClientPost = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.user?._id as string;
+    const postId = req.params.id;
+
+    const post = (await clientModel.findById(postId)) as IClientProfile;
+    if (!post) {
+      return next(new ErrorHandler("Post not found", 404));
+    }
+
+    // Check ownership
+    if (post.user.toString() !== userId.toString()) {
+      return next(new ErrorHandler("Unauthorized", 403));
+    }
+
+    // Delete image from Cloudinary if exists
+    if (post.profileImage?.public_id) {
+      try {
+        await cloudinary.v2.uploader.destroy(post.profileImage.public_id);
+      } catch (error: any) {
+        // Log but don't block deletion
+        console.error("Cloudinary deletion error:", error.message);
+      }
+    }
+
+    await clientModel.findByIdAndDelete(postId);
+
+    res.status(200).json({
+      success: true,
+      message: "Post deleted successfully",
+    });
   } catch (error: any) {
     return next(new ErrorHandler(error.message, 500));
   }
