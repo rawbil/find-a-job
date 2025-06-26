@@ -156,9 +156,9 @@ export default function Home() {
           <a href="#services">Popular Services</a>
           <a href="#jobs">Client Jobs</a>
           {accessToken && (
-            <a href="/profile" className="btn">
+            <Link to="/profile" className="btn">
               <FaUserAlt /> Profile
-            </a>
+            </Link>
           )}
 
           {accessToken ? (
