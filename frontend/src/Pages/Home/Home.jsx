@@ -27,6 +27,7 @@ import AppContext from "../../../utils/context/ContextFunc";
 import CustomerProfile from "../CustomerProfile/CustomerProfile";
 import { getLatestClientPosts } from "../../../utils/services/client.service";
 import { formatPhoneNumber } from "../../../utils/formatPhoneNumber";
+import {Link} from 'react-router-dom'
 import AOS from 'aos';
 import 'aos/dist/aos.css'
 
@@ -156,9 +157,9 @@ export default function Home() {
           <a href="#services">Popular Services</a>
           <a href="#jobs">Client Jobs</a>
           {accessToken && (
-            <a href="/profile" className="btn">
+            <Link to="/profile" className="btn">
               <FaUserAlt /> Profile
-            </a>
+            </Link>
           )}
 
           {accessToken ? (
@@ -166,9 +167,9 @@ export default function Home() {
               <FaSignOutAlt size={20} /> Logout
             </button>
           ) : (
-            <a href="/auth" className="login-btn">
+            <Link to="/auth" className="login-btn">
               Login
-            </a>
+            </Link>
           )}
         </nav>
       </header>
