@@ -27,8 +27,8 @@ import AppContext from "../../../utils/context/ContextFunc";
 import CustomerProfile from "../CustomerProfile/CustomerProfile";
 import { getLatestClientPosts } from "../../../utils/services/client.service";
 import { formatPhoneNumber } from "../../../utils/formatPhoneNumber";
-import AOS from 'aos';
-import 'aos/dist/aos.css'
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 const workersImg = "/workers-illustration.png";
 
@@ -48,14 +48,14 @@ export default function Home() {
   const [jobsError, setJobsError] = useState("");
   const [jobSearchQuery, setJobSearchQuery] = useState("");
 
-    //aos animations
+  //aos animations
   useEffect(() => {
     AOS.init({
       duration: 1200,
-      easing: 'ease-in-out',
+      easing: "ease-in-out",
       once: false,
-    })
-  }, [])
+    });
+  }, []);
 
   useEffect(() => {
     const getLatestProfiles = async () => {
@@ -145,7 +145,6 @@ export default function Home() {
     );
   };
 
-
   return (
     <div className="home dark">
       <header className="home-navbar">
@@ -173,7 +172,7 @@ export default function Home() {
         </nav>
       </header>
 
-      <section className="home-hero" data-aos='fade-up'>
+      <section className="home-hero" data-aos="fade-up">
         <div className="home-hero-text">
           <h1>Find Trusted Local Services Near You</h1>
           <p>
@@ -230,7 +229,7 @@ export default function Home() {
             View All
           </p>
         </div>
-        <div className="providers-scroll-container" data-aos='fade-up'>
+        <div className="providers-scroll-container" data-aos="fade-up">
           <div className="providers-grid">
             {profileLoading
               ? "Fetching service providers... be patient dude!!"
@@ -281,8 +280,10 @@ export default function Home() {
                         <div className="contact-buttons">
                           {profile.phoneNumber && (
                             <a
-                              href={`https://wa.me/${formatPhoneNumber(profile.phoneNumber).replace("+", "")}`}
-    className="whatsapp-button"
+                              href={`https://wa.me/${formatPhoneNumber(
+                                profile.phoneNumber
+                              ).replace("+", "")}`}
+                              className="whatsapp-button"
                               target="_blank"
                               rel="noopener noreferrer"
                             >
@@ -292,7 +293,9 @@ export default function Home() {
                           )}
                           {profile.phoneNumber && (
                             <a
-                              href={`tel:${formatPhoneNumber(profile.phoneNumber)}`}
+                              href={`tel:${formatPhoneNumber(
+                                profile.phoneNumber
+                              )}`}
                               className="phone-button"
                             >
                               <FaPhoneAlt size={20} />
@@ -334,7 +337,7 @@ export default function Home() {
         </button>
       </form>
       {/* Clients posting jobs */}
-      <section className="featured-providers" id="jobs" data-aos='fade-up'>
+      <section className="featured-providers" id="jobs" data-aos="fade-up">
         <div className="section-header">
           <h2>Featured Jobs</h2>
           <p className="view-all">View All</p>
