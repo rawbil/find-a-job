@@ -22,7 +22,7 @@ export const accessTokenOptions = {
   maxAge: accessTokenExpires * 60 * 1000,
   secure: process.env.NODE_ENV === "production",
   httpOnly: true,
-  sameSite: "lax",
+  sameSite: "none",
 } as ITokenOptions;
 
 export const refreshTokenOptions = {
@@ -30,7 +30,7 @@ export const refreshTokenOptions = {
   maxAge: refreshTokenExpires * 24 * 60 * 60 * 1000,
   secure: process.env.NODE_ENV === "production",
   httpOnly: true,
-  sameSite: "lax",
+  sameSite: "none",
 } as ITokenOptions;
 
 //main function
