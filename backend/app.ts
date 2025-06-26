@@ -16,13 +16,16 @@ app.use(cookieParser());
 
 //cors config
 const corsOptions = {
-    origin: process.env.ORIGIN || "http://localhost:5173",
-    credentials: true,
-     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-}
-app.use(cors(corsOptions));
+  origin: [
+    "http://localhost:5173", // for local development
+    "https://jobjuafrontend.onrender.com" // your deployed frontend
+  ],
+  credentials: true,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+};
 
+app.use(cors(corsOptions));
 app.use('/api/auth', AuthRoute);
 app.use('/api/profile', ProfileRoute);
 app.use('/api/client', ClientRoute);
