@@ -7,6 +7,7 @@ import {
   GetLatestUsersProfiles,
   UpdateClientPost,
   DeleteClientPost,
+  GetUserPosts,
 } from "../controllers/client.controller";
 import AuthMiddleware from "../middleware/auth.middleware";
 
@@ -37,5 +38,8 @@ router.get("/profiles", GetAllUsersProfiles);
 // Get latest 10 client profiles (public or protected as needed)
 //api/client/latest
 router.get("/latest", GetLatestUsersProfiles);
+
+//api/client/user-posts
+router.get('/user-posts', AuthMiddleware, GetUserPosts);
 
 export default router;

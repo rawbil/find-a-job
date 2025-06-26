@@ -398,3 +398,20 @@ export const DeleteClientPost = async (
     return next(new ErrorHandler(error.message, 500));
   }
 };
+
+
+//!Get posts from a single user
+export const GetUserPosts = async(req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user?._id as string;
+    const userPosts = await clientModel.find({user: userId});
+    if(!userPosts) {
+      return next(new ErrorHandler("You have no posts yet.", 400));
+    }
+
+    res.status(200).json({success: true, userPosts});
+    
+  } catch (error: any) {
+     return next(new ErrorHandler(error.message, 500));
+  }
+}
