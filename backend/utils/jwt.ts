@@ -22,7 +22,7 @@ export const accessTokenOptions = {
   maxAge: accessTokenExpires * 60 * 1000,
   secure: process.env.NODE_ENV === "production",
   httpOnly: true,
-  sameSite: "lax",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
 } as ITokenOptions;
 
 export const refreshTokenOptions = {
@@ -30,7 +30,7 @@ export const refreshTokenOptions = {
   maxAge: refreshTokenExpires * 24 * 60 * 60 * 1000,
   secure: process.env.NODE_ENV === "production",
   httpOnly: true,
-  sameSite: "lax",
+  sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
 } as ITokenOptions;
 
 //main function
@@ -42,13 +42,11 @@ export default async function CreateCookies(res: Response, user: IUser) {
   res.cookie("access_token", access_token, accessTokenOptions);
   res.cookie("refresh_token", refresh_token, refreshTokenOptions);
 
-  res
-    .status(200)
-    .json({
-      success: true,
-      user,
-      access_token,
-      refresh_token,
-      message: "Login successful!!",
-    });
+  res.status(200).json({
+    success: true,
+    user,
+    access_token,
+    refresh_token,
+    message: "Login successful!!",
+  });
 }
