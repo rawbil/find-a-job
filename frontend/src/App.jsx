@@ -16,6 +16,7 @@ function App() {
       <Toaster />
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/profile" element={<UserProfile />} />
         <Route path="/profile-display" element={<ProfileDisplay />} />
