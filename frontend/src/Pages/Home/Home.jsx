@@ -29,6 +29,7 @@ import { getLatestClientPosts } from "../../../utils/services/client.service";
 import { formatPhoneNumber } from "../../../utils/formatPhoneNumber";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { Link } from "react-router-dom";
 
 const workersImg = "/workers-illustration.png";
 
@@ -165,9 +166,9 @@ export default function Home() {
               <FaSignOutAlt size={20} /> Logout
             </button>
           ) : (
-            <a href="/auth" className="login-btn">
+            <Link to="/auth" className="login-btn">
               Login
-            </a>
+            </Link>
           )}
         </nav>
       </header>
