@@ -116,7 +116,7 @@ export default function ProviderProfile() {
         toast.success(response.message);
         setuserProfile(response.profile);
         setIsEditing(false);
-        window.location.reload();
+        //window.location.reload();
       } else {
         toast.error(response.message);
         setError(response.message);

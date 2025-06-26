@@ -126,7 +126,7 @@ export default function ClientProfile() {
         toast.success(response.message);
         setClientProfile(response.updatedProfile);
         setIsEditing(false);
-        window.location.reload();
+       // window.location.reload();
       } else {
         toast.error(response.message);
         setError(response.message);
