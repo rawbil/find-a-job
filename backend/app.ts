@@ -16,11 +16,11 @@ app.use(cookieParser());
 
 //cors config
 const corsOptions = {
-    origin: process.env.ORIGIN || "http://localhost:5173",
+    origin: process.env.ORIGIN || "*",
     credentials: true,
-     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-}
+    methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"]
+};
 app.use(cors(corsOptions));
 
 app.use('/api/auth', AuthRoute);
