@@ -6,6 +6,7 @@ import {
   getClientPosts,
   updateClientPost,
   deleteClientPost,
+  getSpecificUserPosts,
 } from "../../../utils/services/client.service";
 import toast from "react-hot-toast";
 import { FaArrowLeft, FaEdit, FaTrash, FaPlus } from "react-icons/fa";
@@ -21,9 +22,9 @@ export default function ClientProfile() {
     const fetchPosts = async () => {
       setLoading(true);
       try {
-        const response = await getClientPosts();
+        const response = await getSpecificUserPosts();
         if (response.success) {
-          setPosts(response.profiles);
+          setPosts(response.userPosts);
           console.log(posts)
           setError("");
         } else {
@@ -142,7 +143,7 @@ const handleSave = async () => {
 
     if (response.success) {
       toast.success(response.message);
-      const refreshed = await getClientPosts();
+      const refreshed = await getSpecificUserPosts();
       setPosts(refreshed.posts || []);
       setIsEditing(false);
       setEditForm(null);

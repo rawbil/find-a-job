@@ -404,7 +404,7 @@ export const DeleteClientPost = async (
 export const GetUserPosts = async(req: Request, res: Response, next: NextFunction) => {
   try {
     const userId = req.user?._id as string;
-    const userPosts = await clientModel.find({user: userId});
+    const userPosts = await clientModel.find({user: userId}).sort({updatedAt: -1});
     if(!userPosts) {
       return next(new ErrorHandler("You have no posts yet.", 400));
     }

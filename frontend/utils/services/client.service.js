@@ -1,5 +1,6 @@
 import { AxiosError } from "axios";
 import createApi, { handleTokenExpiration } from "../axios.create-api";
+import toast from "react-hot-toast";
 
 //create
 export const createClientPost = async (data) => {
@@ -29,6 +30,7 @@ export const updateClientPost = async (postId, data) => {
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
+      toast.error(error.response.data.message)
       throw error;
     } else if (error.message === 'TOKEN_EXPIRED') {
       handleTokenExpiration();
@@ -48,7 +50,8 @@ export const getClientPost = async (postId) => {
     return response.data;
   } catch (error) {
     if (error instanceof AxiosError) {
-      throw error;
+     
+      toast.error(error.response?.data.message); throw error;
     } else if (error.message === 'TOKEN_EXPIRED') {
       handleTokenExpiration();
       throw error;
@@ -115,3 +118,15 @@ export const deleteClientPost = async (postId) => {
     }
   }
 };
+
+//get specific user's posts
+export const getSpecificUserPosts = async() => {
+  try {
+    const response = await createApi.get('/client/user-posts', {
+      withCredentials: true
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
