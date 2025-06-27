@@ -51,7 +51,8 @@
 
 .profile-sub {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  gap: 5px;
 align-items: center;
 margin-top: 20px;
 }
@@ -59,7 +60,20 @@ margin-top: 20px;
 .edit-off {
   display: flex;
   flex-direction: column;
-  gap: 20px
+  gap: 20px;
+
+}
+
+.profile-details {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 20px;
+  font-size: 20px;
+  border: 1px solid whitesmoke;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 5px whitesmoke;
 }
 
 .delete-container {

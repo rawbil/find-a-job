@@ -85,7 +85,7 @@ export default function UserProfile() {
 
   return (
     <div className="profile-choice-container">
-      <h2>Welcome Back <span className="username">{userById.fullName}</span> <span> <FaPenSquare title="edit user" onClick={() => setIsEditing(!isEditing)} /></span></h2>
+      <h2>Welcome Back <span className="username">{userById.fullName}</span> <span> <FaPenSquare style={{cursor: "pointer"}} title="edit user" onClick={() => setIsEditing(!isEditing)} /></span></h2>
       <div className="profile-choice-buttons">
         <button
           className="profile-choice-btn"
@@ -102,33 +102,34 @@ export default function UserProfile() {
       </div>
       <div className="profile-body">
         {isEditing ? (
-          <>
-            <label>
-              Name:
+          <section className="profile-form">
+            <label htmlFor="name" style={{textAlign: "start", color: "#ccc"}}>
+              Name:</label>
               <input
                 type="text"
                 value={editForm.fullName}
                 onChange={e => setEditForm({ ...editForm, fullName: e.target.value })}
               />
-            </label>
-            <label>
-              Email:
+            
+            <label style={{textAlign: "start", color: "#ccc"}}>
+              Email:</label>
               <input
                 type="email"
                 value={editForm.email}
                 onChange={e => setEditForm({ ...editForm, email: e.target.value })}
               />
-            </label>
+            
             <div className="profile-sub">
             <button onClick={handleSave} className="profile-choice-btn">Save</button>
             <button onClick={() => setIsEditing(false)} className="profile-choice-btn" style={{ background: "#eee", color: "#333" }}>Cancel</button></div>
-          </>
+          </section>
         ) : (
             <div className="edit-off">
+              <div className="profile-details">
     <p>Name: {userById.fullName}</p>
     <p>Email: {userById.email}</p>
-    <button onClick={handleEditClick} className="profile-choice-btn">Edit Profile</button>
-    <div className="delete-container">
+    {/* <button onClick={handleEditClick} className="profile-choice-btn">Edit Profile</button>*/}</div>
+    <div className="delete-container"> 
     <input
       type="password"
       placeholder="Enter password to delete"
