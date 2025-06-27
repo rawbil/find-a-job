@@ -33,7 +33,7 @@ export const updateUserService = async(data) => {
 //delete user
 export const deleteUserService = async(password) => {
     try {
-        const response = await createApi.post('/users/delete', password, {withCredentials: true });
+        const response = await createApi.post('/users/delete', { password }, { withCredentials: true });
         return response.data;
     } catch (error) {
         if (error.message === 'TOKEN_EXPIRED') {
