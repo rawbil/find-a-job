@@ -16,9 +16,7 @@ export default function UserProfile() {
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({ fullName: "", email: "" });
   const [password, setPassword] = useState("");
-
-  useEffect(() => {
-    const getUserById = async () => {
+   const getUserById = async () => {
       try {
         const response = await getUserService();
         if (response.success) {
@@ -33,14 +31,16 @@ export default function UserProfile() {
         throw new Error(error.response.data.message);
       }
     };
+  useEffect(() => {
+ 
     getUserById();
   }, []);
 
   // Handle edit button
   const handleEditClick = () => {
     setEditForm({
-      fullName: userById.fullName,
-      email: userById.email,
+      fullName: userById?.fullName || "",
+      email: userById?.email || "",
     });
     setIsEditing(true);
   };
@@ -80,11 +80,34 @@ export default function UserProfile() {
   // Handle save after editing
   const handleSave = async () => {
     try {
-      const response = await updateUserService(editForm);
+      // Only include fields that have changed and are not empty
+      const updatedForm = {};
+      if (
+        editForm.fullName.trim() &&
+        editForm.fullName.trim() !== userById.fullName
+      ) {
+        updatedForm.fullName = editForm.fullName.trim();
+      }
+      if (
+        editForm.email.trim() &&
+        editForm.email.trim() !== userById.email
+      ) {
+        updatedForm.email = editForm.email.trim();
+      }
+
+      // If no changes made, do not submit
+      if (Object.keys(updatedForm).length === 0) {
+        toast.error("No change made");
+        setIsEditing(false);
+        return;
+      }
+
+      const response = await updateUserService(updatedForm);
       if (response.success) {
         toast.success("Profile updated.");
         setUserById(response.user);
         setIsEditing(false);
+        await getUserById();
       } else {
         toast.error(response.message);
       }
@@ -98,13 +121,14 @@ export default function UserProfile() {
   return (
     <div className="profile-choice-container">
       <h2>
-        Welcome Back <span className="username">{userById.fullName}</span>{" "}
+        Welcome Back <span className="username">{userById?.fullName || ""}</span>{" "}
         <span>
           {" "}
           <FaPenSquare
             style={{ cursor: "pointer" }}
             title="edit user"
-            onClick={() => setIsEditing(!isEditing)}
+            // onClick={() => setIsEditing(!isEditing)}
+            onClick={handleEditClick}
           />
         </span>
       </h2>
@@ -130,6 +154,7 @@ export default function UserProfile() {
             </label>
             <input
               type="text"
+              name="fullName"
               value={editForm.fullName}
               onChange={(e) =>
                 setEditForm({ ...editForm, fullName: e.target.value })
@@ -140,6 +165,7 @@ export default function UserProfile() {
             <input
               type="email"
               value={editForm.email}
+              name="email"
               onChange={(e) =>
                 setEditForm({ ...editForm, email: e.target.value })
               }
@@ -161,8 +187,8 @@ export default function UserProfile() {
         ) : (
           <div className="edit-off">
             <div className="profile-details">
-              <p>Name: {userById.fullName}</p>
-              <p>Email: {userById.email}</p>
+              <p>Name: {userById?.fullName}</p>
+              <p>Email: {userById?.email}</p>
               {/* <button onClick={handleEditClick} className="profile-choice-btn">Edit Profile</button>*/}
             </div>
             <div className="delete-container">

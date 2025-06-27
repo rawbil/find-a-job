@@ -203,7 +203,7 @@ const handleSave = async () => {
         <FaArrowLeft style={{ color: "#fff" }} size={20} />
       </div>
 
-      <h2>Your Job Posts</h2>
+      <h2 style={{color: "whitesmoke"}}>Your Job Posts</h2>
       {error && <p style={{ color: "red" }}>{error}</p>}
 
       {!isEditing && (
@@ -217,7 +217,7 @@ const handleSave = async () => {
       )}
 
       {/* Cards for posts */}
-      {!isEditing && Array.isArray(posts) && posts.length > 0 && (
+      {!isEditing && Array.isArray(posts) && posts.length > 0 ? (
         <div className="client-posts-list" style={{ display: "flex", flexWrap: "wrap", gap: "1.5rem" }}>
           {posts.map((post) => (
             <div
@@ -269,6 +269,21 @@ const handleSave = async () => {
               </div>
             </div>
           ))}
+        </div>
+      ): (
+        <div style={{
+          display: "flex",
+          width: "100%",
+          height: "70vh",
+          overflowY: "hidden",
+          alignItems: "center",
+          justifyContent: "center",
+        }}>
+        <p style={
+          {
+            color: "#ccc"
+          }
+        }>Want to look for professionals to work for you? Add a post</p>
         </div>
       )}
 
