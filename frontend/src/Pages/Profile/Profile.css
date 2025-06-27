@@ -61,3 +61,20 @@ margin-top: 20px;
   flex-direction: column;
   gap: 20px
 }
+
+.delete-container {
+  border: 1.5px solid rgb(245, 75, 75);
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 4px rgb(235, 97, 97);
+  margin-top: 100px;
+  opacity: 0.5;
+}
+
+.delete-container:hover {
+  opacity: 1
+}
+
+.delete-container button {
+  width: 100%;
+}

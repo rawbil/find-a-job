@@ -128,12 +128,13 @@ export default function UserProfile() {
     <p>Name: {userById.fullName}</p>
     <p>Email: {userById.email}</p>
     <button onClick={handleEditClick} className="profile-choice-btn">Edit Profile</button>
+    <div className="delete-container">
     <input
       type="password"
       placeholder="Enter password to delete"
       value={password}
       onChange={e => setPassword(e.target.value)}
-      style={{ marginTop: "1rem", marginBottom: "-10px", display: "block" }}
+      style={{ marginTop: "1rem", display: "block" }}
     />
     <button
       onClick={handleDeleteClick}
@@ -142,7 +143,7 @@ export default function UserProfile() {
       disabled={!password}
     >
       Delete Account
-    </button>
+    </button></div>
   </div>
         )}
       </div>
