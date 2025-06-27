@@ -194,7 +194,7 @@ export default function Home() {
       </section>
 
       <section className="home-services" id="services">
-        <h2>Popular Services</h2>
+        <h2 style={{color: "#fff"}}>Popular Services</h2>
         <div className="home-services-grid">
           {popularServices.map((service, index) => (
             <div className="home-service-card" key={index}>
@@ -219,7 +219,7 @@ export default function Home() {
 
       <section className="featured-providers">
         <div className="section-header">
-          <h2>
+          <h2 style={{color: "#fff"}}>
             {viewAllProfiles
               ? "Browse Service Providers"
               : "Featured Service Providers"}
@@ -337,7 +337,7 @@ export default function Home() {
       {/* Clients posting jobs */}
       <section className="featured-providers" id="jobs" data-aos='fade-up'>
         <div className="section-header">
-          <h2>Featured Jobs</h2>
+          <h2 style={{color: "#fff"}}>Featured Jobs</h2>
           <p className="view-all">View All</p>
         </div>
         <div className="providers-scroll-container">

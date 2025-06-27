@@ -7,11 +7,16 @@ import useAxiosInterceptor from "../protected.axios";
 
 export default function ProviderFunction({ children }) {
   const [accessToken, setAccessToken] = useState(null);
+  const [userById, setUserById] = useState({})
 //globally detect 401 errors and log the user out
   useAxiosInterceptor(setAccessToken);
 
   useEffect(() => {
     const access_token = localStorage.getItem("access_token");
+    const user = localStorage.getItem("userById");
+    if(user) {
+      setUserById(user);
+    }
     if (access_token) {
       setAccessToken(access_token);
      }// else {
@@ -45,7 +50,7 @@ export default function ProviderFunction({ children }) {
   };
 
   return (
-    <AppContext.Provider value={{ accessToken, setAccessToken, handleLogout }}>
+    <AppContext.Provider value={{ accessToken, setAccessToken, handleLogout, userById, setUserById }}>
       {children}
     </AppContext.Provider>
   );

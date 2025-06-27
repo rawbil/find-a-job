@@ -58,10 +58,10 @@ export const CreateUserProfile = async (
     }
 
     // Check if profile with similar email exists
-    const isEmailExists = await clientModel.findOne({ email: data.email });
-    if (isEmailExists) {
-      return next(new ErrorHandler("oops...Email already exists", 409));
-    }
+    // const isEmailExists = await clientModel.findOne({ email: data.email });
+    // if (isEmailExists) {
+    //   return next(new ErrorHandler("oops...Email already exists", 409));
+    // }
 
     // Check number length
     if (data.phoneNumber.length !== 10) {
